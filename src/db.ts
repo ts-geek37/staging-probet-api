@@ -5,5 +5,11 @@ export const pool = new Pool({
 });
 
 export const connectDB = async () => {
-  console.log("PostgreSQL connected");
+  try {
+    await pool.query("select 1");
+    console.log("PostgreSQL connected");
+  } catch (error) {
+    console.error("Failed to connect to PostgreSQL", error);
+    process.exit(1);
+  }
 };

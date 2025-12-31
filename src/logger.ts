@@ -8,7 +8,6 @@ const baseLogDir = path.join(process.cwd(), "logs");
 const errorDir = path.join(baseLogDir, "errors");
 const infoDir = path.join(baseLogDir, "infos");
 
-
 [baseLogDir, errorDir, infoDir].forEach((dir) => {
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 });
@@ -23,10 +22,18 @@ const logFormat = printf(({ level, message, timestamp, stack }) => {
 
 const logger = createLogger({
   level: "info",
-  format: combine(errors({ stack: true }), timestamp({ format: "YYYY-MM-DD HH:mm:ss" }), logFormat),
+  format: combine(
+    errors({ stack: true }),
+    timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
+    logFormat
+  ),
   transports: [
     new transports.Console({
-      format: combine(colorize(), timestamp({ format: "YYYY-MM-DD HH:mm:ss" }), logFormat),
+      format: combine(
+        colorize(),
+        timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
+        logFormat
+      ),
     }),
 
     new transports.File({
@@ -34,7 +41,10 @@ const logger = createLogger({
       level: "info",
       format: combine(
         timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
-        printf(({ timestamp, level, message }) => `${timestamp} ${level.toUpperCase()}: ${message}`)
+        printf(
+          ({ timestamp, level, message }) =>
+            `${timestamp} ${level.toUpperCase()}: ${message}`
+        )
       ),
     }),
 
