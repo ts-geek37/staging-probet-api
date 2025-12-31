@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "tsx src/index.ts"
-    
+    "dev": "tsx src/index.ts",
+    "setup:db": "npx ts-node scripts/setup_db.ts"
+
   },
   "dependencies": {
     "dotenv": "^17.2.3",
