@@ -9,7 +9,7 @@
     "start": "node dist/index.js",
     "typecheck": "tsc --noEmit",
     "db": "graphile-migrate",
-    "setup:db": "node -r dotenv/config ./scripts/setup_db.js"
+    "setup:db": "node -r dotenv/config ./scripts/setup_db.ts"
   },
   "dependencies": {
     "dotenv": "^17.2.3",
