@@ -1,7 +1,7 @@
 import { Router } from "express";
 
-import { publicAuth } from "../../../middlewares";
-import { handler } from "../../../utils";
+import { publicAuth } from "../../middlewares";
+import { handler } from "../../utils";
 import { MatchesController } from "./matches.controller";
 import { MatchesService } from "./matches.service";
 import { MatchesMockRepository } from "./repositories/matches.mock.repository";

@@ -1,6 +1,6 @@
 import { Request } from "express";
 
-import { badRequest, notFound, success } from "../../../utils";
+import { badRequest, notFound, success } from "../../utils";
 import { MatchesService } from "./matches.service";
 import { MatchDetailView, MatchListStatus } from "./matches.types";
 
