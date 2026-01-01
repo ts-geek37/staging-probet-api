@@ -1,7 +1,11 @@
 import express from "express";
+
+import { installCORS } from "./middlewares";
 import router from "./routes";
 
 const app = express();
+
+app.use(installCORS);
 
 app.use(express.json());
 
