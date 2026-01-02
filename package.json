@@ -8,14 +8,18 @@
     "build": "npm run clean && tsc",
     "start": "node dist/index.js",
     "typecheck": "tsc --noEmit",
-    "db": "graphile-migrate",
-    "setup:db": "node -r dotenv/config ./scripts/setup_db.ts"
+    "setup:db": "node -r dotenv/config ./scripts/setup_db.ts",
+    "db:generate": "drizzle-kit generate --config ./src/drizzle.config.ts",
+    "db:push": "drizzle-kit push --config ./src/drizzle.config.ts"
   },
   "dependencies": {
+    "@clerk/backend": "^2.29.0",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
+    "drizzle-orm": "^0.45.1",
     "express": "^5.2.1",
     "pg": "^8.16.3",
+    "svix": "^1.84.1",
     "winston": "^3.19.0"
   },
   "devDependencies": {
@@ -24,6 +28,7 @@
     "@types/node": "^25.0.3",
     "@types/pg": "^8.16.0",
     "@types/winston": "^2.4.4",
+    "drizzle-kit": "^0.31.8",
     "ts-node": "^10.9.2",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3"
