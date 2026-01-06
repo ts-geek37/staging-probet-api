@@ -40,6 +40,7 @@ export interface TeamBase {
   name: string;
   logo: string;
   country: string;
+  country_flag?: string;
   founded: number | null;
   stadium: {
     name: string | null;
@@ -71,7 +72,7 @@ export interface TeamOverviewResponse extends TeamBase {
 }
 
 export interface TeamMatchesResponse extends TeamBase {
-  matches: TeamMatchSummary[];
+  matches: { recent: TeamMatchSummary[]; upcoming: TeamMatchSummary[] };
 }
 
 export interface TeamSquadResponse extends TeamBase {
@@ -87,6 +88,11 @@ export interface TeamStatsResponse extends TeamBase {
     goals_scored: number;
     goals_conceded: number;
     clean_sheets: number;
+    goal_difference: number;
+    possession_percentage: number;
+    pass_accuracy_percentage: number;
+    average_shots: number;
+    performance_index: number;
   };
 }
 

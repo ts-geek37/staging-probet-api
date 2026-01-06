@@ -1,5 +1,6 @@
 export interface LeagueResponse {
   league: LeagueHeader;
+  recent?: LeagueMatch[];
   overview?: LeagueOverview;
   standings?: LeagueStandings;
   matches?: LeagueMatches;
@@ -13,6 +14,7 @@ export interface LeagueHeader {
   country: string;
   season: string;
   logo: string;
+  country_flag: string;
 }
 
 export interface LeagueOverview {
@@ -79,6 +81,7 @@ export interface LeagueStats {
     player_id: number;
     name: string;
     team: string;
+    team_logo_url: string;
     goals: number;
   }>;
 }
@@ -110,6 +113,7 @@ export interface LeagueListItem {
   country: string;
   season: string;
   logo: string;
+  country_flag: string;
 }
 
 export interface PaginationMeta {

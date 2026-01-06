@@ -7,8 +7,7 @@ import logger from "../../logger";
 
 export class ClerkWebhookService {
   private getPrimaryEmail(user: UserJSON): string | null {
-    console.log('user',user);
-    const emailObj = user.email_addresses?.find(
+     const emailObj = user.email_addresses?.find(
       (e) => e.id === user.primary_email_address_id
     );
     return (
