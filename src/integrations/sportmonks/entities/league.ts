@@ -14,4 +14,6 @@ export interface SportMonksLeague {
   category: number | null;
   has_jerseys: boolean;
   seasons?: SportMonksSeason[];
+  has_standings?: boolean;
+  has_rounds?: boolean;
 }

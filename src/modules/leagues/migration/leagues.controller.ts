@@ -1,7 +1,7 @@
 import { Request } from "express";
 import { badRequest, notFound, success } from "../../../utils";
-import { MatchListStatus } from "../../matches/migration/matches.types";
-import { LeaguesService } from "./leagues.service";
+ import { LeaguesService } from "./leagues.service";
+import { MatchListStatus } from "../../matches/matches.types";
 
 export class LeaguesController {
   constructor(private readonly service: LeaguesService) {}

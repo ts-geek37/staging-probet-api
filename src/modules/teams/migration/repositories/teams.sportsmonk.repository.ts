@@ -5,7 +5,6 @@ import {
 } from "../../../../integrations/sportmonks/entities";
 import { SportMonksClient } from "../../../../integrations/sportmonks/sportmonks.client";
 import { SportMonksResponse } from "../../../../integrations/sportmonks/sportmonks.types";
-import { SportMonksSeasonStatistic } from "../../../players/migration/players.sportsmonk.types";
 import {
   MatchListItem,
   SportMonksTeamSeasonStatistic,
@@ -30,20 +29,22 @@ const TEAM_STAT_EXTRACTORS: Record<
   { key: keyof TeamSeasonStatsResponse["stats"]; extract: StatExtractor }
 > = {
   // Goals
-  52: { key: "goals_for", extract: v => v?.all?.scored ?? null },
-  53: { key: "goals_against", extract: v => v?.all?.conceded ?? null },
+  52: { key: "goals_for", extract: (v) => v?.all?.scored ?? null },
+  53: { key: "goals_against", extract: (v) => v?.all?.conceded ?? null },
 
   // Shots
-  34: { key: "shots", extract: v => v?.count ?? null },
+  34: { key: "shots", extract: (v) => v?.count ?? null },
 
   // Cards
-  64: { key: "yellow_cards", extract: v => v?.count ?? null },
-  78: { key: "red_cards", extract: v => v?.count ?? null },
+  64: { key: "yellow_cards", extract: (v) => v?.count ?? null },
+  78: { key: "red_cards", extract: (v) => v?.count ?? null },
 
   // Minutes
-  27249: { key: "minutes_played", extract: v => v?.total_minutes_played ?? null },
+  27249: {
+    key: "minutes_played",
+    extract: (v) => v?.total_minutes_played ?? null,
+  },
 };
-
 
 export const TeamsSportMonksRepository = (baseRepo: {
   getTeams: TeamsRepository["getTeams"];
@@ -213,61 +214,50 @@ export const TeamsSportMonksRepository = (baseRepo: {
     };
   };
 
-  const resolveLatestSeasonStat = (
-  stats: SportMonksSeasonStatistic[]
-): SportMonksSeasonStatistic | null => {
-  if (!stats || stats.length === 0) return null;
-
-  return stats
-    .filter(s => s.has_values && s.details?.length > 0)
-    .sort((a, b) => b.season_id - a.season_id)[0] ?? null;
-};
-
-
   const getTeamStats = async (
-  teamId: number
-): Promise<TeamSeasonStatsResponse | null> => {
-  const client = new SportMonksClient();
+    teamId: number
+  ): Promise<TeamSeasonStatsResponse | null> => {
+    const client = new SportMonksClient();
 
-  const res = await client.get<
-    SportMonksResponse<SportMonksTeamSeasonStatistic[]>
-  >(`/football/statistics/seasons/teams/${teamId}`, {
-    include: "season;team",
-    order: "desc",
-    per_page: 5,
-  });
+    const res = await client.get<
+      SportMonksResponse<SportMonksTeamSeasonStatistic[]>
+    >(`/football/statistics/seasons/teams/${teamId}`, {
+      include: "season;team",
+      order: "desc",
+      per_page: 5,
+    });
 
-  const seasons = res.data?.filter(s => s.has_values) ?? [];
-  if (seasons.length === 0) return null;
+    const seasons = res.data?.filter((s) => s.has_values) ?? [];
+    if (seasons.length === 0) return null;
 
-  // Latest season with values
-  const current = seasons[0];
+    // Latest season with values
+    const current = seasons[0];
 
-  const stats: TeamSeasonStatsResponse["stats"] = {};
+    const stats: TeamSeasonStatsResponse["stats"] = {};
 
-  for (const detail of current.details ?? []) {
-    const mapping = TEAM_STAT_EXTRACTORS[detail.type_id];
-    if (!mapping) continue;
+    for (const detail of current.details ?? []) {
+      const mapping = TEAM_STAT_EXTRACTORS[detail.type_id];
+      if (!mapping) continue;
 
-    const value = mapping.extract(detail.value);
-    if (value !== null) {
-      stats[mapping.key] = value;
+      const value = mapping.extract(detail.value);
+      if (value !== null) {
+        stats[mapping.key] = value;
+      }
     }
-  }
 
-  return {
-    season: {
-      id: current.season_id,
-      name: current.season?.name ?? "Unknown",
-    },
-    team: {
-      id: current.team_id,
-      name: current.team?.name ?? "Unknown",
-      logo: current.team?.image_path ?? null,
-    },
-    stats,
+    return {
+      season: {
+        id: current.season_id,
+        name: current.season?.name ?? "Unknown",
+      },
+      team: {
+        id: current.team_id,
+        name: current.team?.name ?? "Unknown",
+        logo: current.team?.image_path ?? null,
+      },
+      stats,
+    };
   };
-};
 
   return {
     getTeams,

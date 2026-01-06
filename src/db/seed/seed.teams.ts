@@ -2,8 +2,8 @@ import { db } from "../index"
 import { teams } from "../schema/teams"
 import { SportMonksClient } from "../../integrations/sportmonks/sportmonks.client"
 import { SportMonksResponse } from "../../integrations/sportmonks/sportmonks.types"
-import { SportMonksTeam } from "../../integrations/sportmonks/sportmonks.entities"
-import "dotenv/config";
+ import "dotenv/config";
+import { SportMonksTeam } from "../../integrations/sportmonks/entities";
 
 export const seedTeams = async () => {
   const client = new SportMonksClient()
