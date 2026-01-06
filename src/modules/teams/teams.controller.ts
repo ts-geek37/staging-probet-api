@@ -25,7 +25,6 @@ export class TeamsController {
 
   getTeam = async (req: Request) => {
     const teamId = Number(req.params.id);
-    console.log('teams',req);
     if (!teamId) {
       throw badRequest("Invalid team id");
     }
@@ -37,7 +36,6 @@ export class TeamsController {
       : TeamDetailView.OVERVIEW;
 
     const data = await this.service.getTeam(teamId, view);
-    console.log("dat", data, teamId, view);
     if (!data) {
       throw notFound("Team not found");
     }

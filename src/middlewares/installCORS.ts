@@ -1,20 +1,28 @@
 import cors from "cors";
 
- const installCORS = cors({
-  origin: (origin, callback) => {
-    if (!origin) return callback(null, true);
+const allowedOrigins = (process.env.CORS_ORIGINS ?? "")
+  .split(",")
+  .map((origin) => origin.trim())
+  .filter(Boolean);
 
-    const allowedOrigins = ["http://localhost:3000"];
+const installCORS = cors({
+  origin: (origin, callback) => {
+    if (!origin) {
+      return callback(null, true);
+    }
 
     if (allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
+      return callback(null, true);
     }
+
+    return callback(new Error(`CORS: Origin ${origin} is not allowed`));
   },
+
   credentials: true,
+
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
+
+  allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
 });
 
 export default installCORS;
