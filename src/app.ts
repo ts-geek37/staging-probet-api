@@ -13,7 +13,7 @@ app.use("/webhooks", webhookRoutes);
 app.use(express.json());
 
 app.use("/api", router);
-app.use("/api/2", routesV2);
+app.use("/api/v2", routesV2);
 
 
 app.get("/", (_req, res) => {
