@@ -3,6 +3,7 @@ import {
   SportMonksFixture,
   SportMonksPlayer,
   SportMonksPlayerSeasonStatistic,
+  formatDate as i,
 } from "@/integrations/sportmonks";
 import { MatchStatus } from "@/modules/matches/migration/matches.types";
 import {
@@ -10,7 +11,7 @@ import {
   PlayerSeasonStatsResponse,
 } from "./players.types";
 
-export const formatDate = (d: Date) => d.toISOString().slice(0, 10);
+export const formatDate = i;
 
 export const mapPlayerProfile = (
   p: SportMonksPlayer
@@ -23,7 +24,12 @@ export const mapPlayerProfile = (
       (new Date() < new Date(dob.setFullYear(new Date().getFullYear())) ? 1 : 0)
     : null;
 
-  const team = p.teams?.[0] ?? null;
+  const teams =
+    p.teams?.map((team) => ({
+      id: team.id,
+      name: team.team.name,
+      logo: team.team.image_path,
+    })) ?? [];
 
   return {
     id: p.id,
@@ -45,13 +51,7 @@ export const mapPlayerProfile = (
       id: p.position?.id ?? null,
       name: p.position?.name ?? null,
     },
-    current_team: team
-      ? {
-          id: team.id,
-          name: team.team.name,
-          logo: team.team.image_path,
-        }
-      : null,
+    teams,
   };
 };
 

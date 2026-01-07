@@ -55,7 +55,7 @@ export const PlayersSportMonksRepository = (): PlayersRepository => {
     const now = new Date();
 
     const from = new Date(now);
-    from.setDate(now.getDate() - 30);
+    from.setDate(now.getDate() - 15);
 
     const to = new Date(now);
     to.setDate(now.getDate() + 30);
@@ -65,7 +65,7 @@ export const PlayersSportMonksRepository = (): PlayersRepository => {
       {
         include: "participants;league;scores;state",
         participantsearch: playerId,
-        order: "asc",
+        order: "asc", 
       }
     );
 

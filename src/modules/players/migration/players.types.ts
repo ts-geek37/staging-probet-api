@@ -23,11 +23,13 @@ export interface PlayerProfileResponse {
     name: string | null;
   };
 
-  current_team: {
-    id: number;
-    name: string;
-    logo: string | null;
-  } | null;
+  teams:
+    | {
+        id: number;
+        name: string;
+        logo: string | null;
+      }[]
+    | null;
 }
 
 export interface PlayerSeasonStatsResponse {

@@ -60,10 +60,10 @@ export const TeamsSportMonksRepository = (baseRepo: {
     const now = new Date();
 
     const from = new Date(now);
-    from.setDate(now.getDate() - 7);
+    from.setDate(now.getDate() - 15);
 
     const to = new Date(now);
-    to.setDate(now.getDate() + 7);
+    to.setDate(now.getDate() + 30);
 
     const res = await client.get<SportMonksResponse<SportMonksFixture[]>>(
       `/football/fixtures/between/${formatDate(from)}/${formatDate(

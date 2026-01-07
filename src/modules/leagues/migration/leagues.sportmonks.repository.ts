@@ -1,11 +1,14 @@
 import {
   SportMonksClient,
+  SportMonksFixture,
   SportMonksLeague,
   SportMonksResponse,
-  SportMonksSeason,
   SportMonksStanding,
+  formatDate,
   normalizeCompetitionType,
 } from "@/integrations/sportmonks";
+import { getLeagueProfileFromDb } from "./leagues.db.repository";
+import { LeaguesRepository } from "./leagues.repository";
 import { resolveCurrentSeason } from "./leagues.season.cache";
 import {
   LeagueMatchesResponse,
@@ -13,10 +16,8 @@ import {
   LeagueStandingsResponse,
   LeagueStatisticsResponse,
 } from "./leagues.types";
-import { getLeagueProfileFromDb } from "./leagues.db.repository";
-import { LeaguesRepository } from "./leagues.repository";
 import {
-  mapSeasonMatches,
+  mapLeagueFixtureMatch,
   mapSeasonStatistics,
   mapStandingsTable,
 } from "./mapper";
@@ -87,33 +88,21 @@ export const LeaguesSportMonksRepository = (baseRepo: {
 
     const client = new SportMonksClient();
 
-    const seasonsRes = await client.get<
-      SportMonksResponse<{ id: number; name: string }[]>
-    >(`/football/seasons`, {
-      filters: `league:${leagueId}`,
-      order: "desc",
-      per_page: 3,
+    const season = await resolveCurrentSeason(leagueId, client);
+    if (!season) return null;
+
+    const res = await client.get<
+      SportMonksResponse<{ statistics?: { type_id: number; value: any }[] }>
+    >(`/football/seasons/${season.id}`, {
+      include: "statistics",
     });
-
-    const seasons = seasonsRes.data ?? [];
-    if (seasons.length === 0) return null;
-
-    const seasonStats = [];
-
-    for (const season of seasons) {
-      const res = await client.get<
-        SportMonksResponse<{ statistics?: { type_id: number; value: any }[] }>
-      >(`/football/seasons/${season.id}`, { include: "statistics" });
-
-      seasonStats.push(mapSeasonStatistics(season, res.data.statistics ?? []));
-    }
 
     return {
       league: {
         id: header.id,
         name: header.name,
       },
-      seasons: seasonStats,
+      seasons: [mapSeasonStatistics(season, res.data.statistics ?? [])],
     };
   };
 
@@ -125,24 +114,41 @@ export const LeaguesSportMonksRepository = (baseRepo: {
     if (!header) return null;
 
     const client = new SportMonksClient();
-    const season = await resolveCurrentSeason(leagueId, client);
-    if (!season) return null;
 
-    const res = await client.get<SportMonksResponse<SportMonksSeason>>(
-      `/football/seasons/${season.id}`,
-      { include: "fixtures.participants;fixtures.scores" }
+    const now = new Date();
+
+    const from = new Date(now);
+    from.setDate(now.getDate() - 30);
+
+    const to = new Date(now);
+    to.setDate(now.getDate() + 30);
+
+    const res = await client.get<SportMonksResponse<SportMonksFixture[]>>(
+      `/football/fixtures/between/${formatDate(from)}/${formatDate(to)}`,
+      {
+        include: "participants;league;scores;state",
+        params: {
+          "filter[league_id]": leagueId,
+          order: "asc",
+        },
+      }
     );
+
+    const matches = (res.data ?? [])
+      .map((f) => mapLeagueFixtureMatch(f))
+      .filter(Boolean)
+      .filter((m) => {
+        if (!status) return true;
+        return m.status === status;
+      });
 
     return {
       league: {
         id: header.id,
         name: header.name,
       },
-      season: {
-        id: season.id,
-        name: season.name,
-      },
-      matches: mapSeasonMatches(res.data.fixtures ?? [], status),
+      season: null,
+      matches,
     };
   };
 

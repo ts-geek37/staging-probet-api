@@ -4,6 +4,7 @@ import { getTeamProfileFromDb, getTeamsFromDb } from "./teams.db.repository";
 import { mockTeamsRepository } from "./teams.mock.repository";
 import { TeamsController } from "./teams.controller";
 import { TeamsService } from "./teams.service";
+import { TeamsSportMonksRepository } from "./teams.sportmonks.repository";
 
 const router = Router();
 

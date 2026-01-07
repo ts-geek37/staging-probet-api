@@ -1,6 +1,7 @@
 import {
   normalizeFixtureStatus,
   normalizeForm,
+  SportMonksFixture,
   SportMonksStanding,
 } from "@/integrations/sportmonks";
 
@@ -54,50 +55,48 @@ export const mapSeasonStatistics = (
   };
 };
 
-export const mapSeasonMatches = (
-  fixtures: any[],
-  status?: "LIVE" | "UPCOMING" | "FT"
-) =>
-  fixtures
-    .map((f) => {
-      const home = f.participants.find((p) => p.meta?.location === "home");
-      const away = f.participants.find((p) => p.meta?.location === "away");
-      if (!home || !away) return null;
+export const mapLeagueFixtureMatch = (f: SportMonksFixture) => {
+  const home = f.participants.find((p) => p.meta?.location === "home");
+  const away = f.participants.find((p) => p.meta?.location === "away");
+  if (!home || !away || !f.league) return null;
 
-      const matchStatus = normalizeFixtureStatus(f.state_id);
+  const status = normalizeFixtureStatus(f.state_id);
 
-      return {
-        id: f.id,
-        kickoff_time: f.starting_at,
-        status: matchStatus,
-        home_team: {
-          id: home.id,
-          name: home.name,
-          logo: home.image_path,
-          score: {
-            goals:
+  return {
+    id: f.id,
+    kickoff_time: f.starting_at,
+    status,
+    league: {
+      id: f.league.id,
+      name: f.league.name,
+      logo: f.league.image_path ?? null,
+    },
+    teams: {
+      home: {
+        id: home.id,
+        name: home.name,
+        logo: home.image_path ?? null,
+      },
+      away: {
+        id: away.id,
+        name: away.name,
+        logo: away.image_path ?? null,
+      },
+    },
+    score:
+      status !== "UPCOMING"
+        ? {
+            home:
               f.scores?.find(
                 (s) =>
                   s.participant_id === home.id && s.description === "CURRENT"
               )?.score.goals ?? null,
-          },
-        },
-        away_team: {
-          id: away.id,
-          name: away.name,
-          logo: away.image_path,
-          score: {
-            goals:
+            away:
               f.scores?.find(
                 (s) =>
                   s.participant_id === away.id && s.description === "CURRENT"
               )?.score.goals ?? null,
-          },
-        },
-      };
-    })
-    .filter(Boolean)
-    .filter((m) => {
-      if (!status) return true;
-      return m.status === status;
-    });
+          }
+        : undefined,
+  };
+};

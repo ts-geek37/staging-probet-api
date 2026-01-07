@@ -252,18 +252,26 @@ export const mockLeaguesRepository: LeaguesRepository = {
         id: leagueId * 1000 + i,
         kickoff_time: `2026-01-${10 + i}T18:00:00Z`,
         status:
-          status ?? (i % 3 === 0 ? "LIVE" : i % 2 === 0 ? "UPCOMING" : "FT"),
-        home_team: {
-          id: leagueId * 200 + i,
-          name: `Home FC ${i + 1}`,
-          logo: null,
-          score: { goals: i % 4 },
+          status ??
+          ((i % 3 === 0 ? "LIVE" : i % 2 === 0 ? "UPCOMING" : "FT") as any),
+        league: {
+          id: league.id,
+          name: league.name,
+          logo: "https://upload.wikimedia.org/wikipedia/en/1/15/DFB-Pokal_Logo.svg",
         },
-        away_team: {
-          id: leagueId * 300 + i,
-          name: `Away FC ${i + 1}`,
-          logo: null,
-          score: { goals: (i + 1) % 3 },
+        teams: {
+          home: {
+            id: leagueId * 200 + i,
+            name: `Home FC ${i + 1}`,
+            logo: null,
+            score: { goals: i % 4 },
+          },
+          away: {
+            id: leagueId * 300 + i,
+            name: `Away FC ${i + 1}`,
+            logo: null,
+            score: { goals: (i + 1) % 3 },
+          },
         },
       })),
     };

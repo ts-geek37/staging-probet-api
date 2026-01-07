@@ -1,9 +1,9 @@
+import { PlayersRepository } from "./players.repository";
 import {
   PlayerMatchesResponse,
   PlayerProfileResponse,
   PlayerSeasonStatsResponse,
 } from "./players.types";
-import { PlayersRepository } from "./players.repository";
 
 export const mockPlayerProfiles: Record<number, PlayerProfileResponse> = {
   201: {
@@ -25,11 +25,13 @@ export const mockPlayerProfiles: Record<number, PlayerProfileResponse> = {
       id: 4,
       name: "Midfielder",
     },
-    current_team: {
-      id: 7,
-      name: "Real Madrid",
-      logo: "https://upload.wikimedia.org/wikipedia/en/5/56/Real_Madrid_CF.svg",
-    },
+    teams: [
+      {
+        id: 7,
+        name: "Real Madrid",
+        logo: "https://upload.wikimedia.org/wikipedia/en/5/56/Real_Madrid_CF.svg",
+      },
+    ],
   },
   202: {
     id: 202,
@@ -50,11 +52,13 @@ export const mockPlayerProfiles: Record<number, PlayerProfileResponse> = {
       id: 9,
       name: "Forward",
     },
-    current_team: {
-      id: 5,
-      name: "Manchester City",
-      logo: "https://upload.wikimedia.org/wikipedia/en/e/eb/Manchester_City_FC_badge.svg",
-    },
+    teams: [
+      {
+        id: 5,
+        name: "Manchester City",
+        logo: "https://upload.wikimedia.org/wikipedia/en/e/eb/Manchester_City_FC_badge.svg",
+      },
+    ],
   },
 };
 
