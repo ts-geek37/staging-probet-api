@@ -152,20 +152,43 @@ export const mockTeamMatches: Record<number, TeamMatchesResponse> = {
 
 export const mockTeamStats: Record<number, TeamSeasonStatsResponse> = {
   1: {
-    season: { id: 1001, name: "2024/25" },
     team: {
       id: 1,
       name: "Manchester United",
       logo: "https://upload.wikimedia.org/wikipedia/en/7/7a/Manchester_United_FC_crest.svg",
     },
-    stats: {
-      goals_for: 58,
-      goals_against: 32,
-      shots: 410,
-      yellow_cards: 61,
-      red_cards: 3,
-      minutes_played: 34200,
-    },
+    seasons: [
+      {
+        season: { id: 1001, name: "2024/25" },
+        stats: {
+          goals_for: 58,
+          goals_against: 32,
+          shots: 410,
+          yellow_cards: 61,
+          red_cards: 3,
+          minutes_played: 34200,
+          clean_sheets: 14,
+          wins: 21,
+          draws: 9,
+          losses: 8,
+        },
+      },
+      {
+        season: { id: 999, name: "2023/24" },
+        stats: {
+          goals_for: 54,
+          goals_against: 40,
+          shots: 395,
+          yellow_cards: 68,
+          red_cards: 5,
+          minutes_played: 34200,
+          clean_sheets: 11,
+          wins: 18,
+          draws: 10,
+          losses: 10,
+        },
+      },
+    ],
   },
 };
 

@@ -13,6 +13,7 @@ import {
   TeamPlayersResponse,
   TeamSeasonStatsResponse,
 } from "../teams.types";
+import { TEAM_STAT_EXTRACTORS } from "./extractor";
 import { TeamsRepository } from "./teams.repository";
 
 const normalizeMatchStatus = (stateId: number): "UPCOMING" | "LIVE" | "FT" => {
@@ -22,29 +23,6 @@ const normalizeMatchStatus = (stateId: number): "UPCOMING" | "LIVE" | "FT" => {
 };
 
 const formatDate = (d: Date) => d.toISOString().slice(0, 10);
-type StatExtractor = (value: any) => number | null;
-
-const TEAM_STAT_EXTRACTORS: Record<
-  number,
-  { key: keyof TeamSeasonStatsResponse["stats"]; extract: StatExtractor }
-> = {
-  // Goals
-  52: { key: "goals_for", extract: (v) => v?.all?.scored ?? null },
-  53: { key: "goals_against", extract: (v) => v?.all?.conceded ?? null },
-
-  // Shots
-  34: { key: "shots", extract: (v) => v?.count ?? null },
-
-  // Cards
-  64: { key: "yellow_cards", extract: (v) => v?.count ?? null },
-  78: { key: "red_cards", extract: (v) => v?.count ?? null },
-
-  // Minutes
-  27249: {
-    key: "minutes_played",
-    extract: (v) => v?.total_minutes_played ?? null,
-  },
-};
 
 export const TeamsSportMonksRepository = (baseRepo: {
   getTeams: TeamsRepository["getTeams"];
@@ -227,35 +205,41 @@ export const TeamsSportMonksRepository = (baseRepo: {
       per_page: 5,
     });
 
-    const seasons = res.data?.filter((s) => s.has_values) ?? [];
-    if (seasons.length === 0) return null;
+    const seasonsRaw = (res.data ?? []).filter((s) => s.has_values);
+    if (seasonsRaw.length === 0) return null;
 
-    // Latest season with values
-    const current = seasons[0];
+    const team = seasonsRaw[0].team;
+    if (!team) return null;
 
-    const stats: TeamSeasonStatsResponse["stats"] = {};
+    const seasons = seasonsRaw.map((seasonStat) => {
+      const stats: Record<string, number | null> = {};
 
-    for (const detail of current.details ?? []) {
-      const mapping = TEAM_STAT_EXTRACTORS[detail.type_id];
-      if (!mapping) continue;
+      for (const detail of seasonStat.details ?? []) {
+        const extractor = TEAM_STAT_EXTRACTORS[detail.type_id];
+        if (!extractor) continue;
 
-      const value = mapping.extract(detail.value);
-      if (value !== null) {
-        stats[mapping.key] = value;
+        const value = extractor.extract(detail.value);
+        if (value !== null) {
+          stats[extractor.key as string] = value;
+        }
       }
-    }
+
+      return {
+        season: {
+          id: seasonStat.season_id,
+          name: seasonStat.season?.name ?? "Unknown",
+        },
+        stats,
+      };
+    });
 
     return {
-      season: {
-        id: current.season_id,
-        name: current.season?.name ?? "Unknown",
-      },
       team: {
-        id: current.team_id,
-        name: current.team?.name ?? "Unknown",
-        logo: current.team?.image_path ?? null,
+        id: team.id,
+        name: team.name,
+        logo: team.image_path ?? null,
       },
-      stats,
+      seasons,
     };
   };
 

@@ -197,24 +197,48 @@ export const mockLeaguesRepository: LeaguesRepository = {
 
     return {
       league: { id: league.id, name: league.name },
-      season: { id: leagueId * 10, name: "2024/25" },
-      overview: {
-        matches_played: 240,
-        total_goals: 680,
-        average_goals_per_match: 2.83,
-        yellow_cards: 920,
-        red_cards: 41,
-      },
-      scoring: {
-        home_goals_percentage: 55,
-        away_goals_percentage: 45,
-        over_25_percentage: 62,
-        under_25_percentage: 38,
-      },
-      discipline: {
-        average_yellow_cards: 3.9,
-        average_red_cards: 0.17,
-      },
+      seasons: [
+        {
+          season: { id: leagueId * 10, name: "2024/25" },
+          overview: {
+            matches_played: 240,
+            total_goals: 680,
+            average_goals_per_match: 2.83,
+          },
+          scoring: {
+            home_goals_percentage: 55,
+            away_goals_percentage: 45,
+            over_25_percentage: 62,
+            under_25_percentage: 38,
+          },
+          discipline: {
+            average_yellow_cards: 3.9,
+            average_red_cards: 0.17,
+            yellow_cards: 920,
+            red_cards: 41,
+          },
+        },
+        {
+          season: { id: leagueId * 11, name: "2025/26" },
+          overview: {
+            matches_played: 256,
+            total_goals: 700,
+            average_goals_per_match: 2.83,
+          },
+          scoring: {
+            home_goals_percentage: 65,
+            away_goals_percentage: 35,
+            over_25_percentage: 62,
+            under_25_percentage: 38,
+          },
+          discipline: {
+            average_yellow_cards: 3.9,
+            average_red_cards: 0.17,
+            yellow_cards: 990,
+            red_cards: 51,
+          },
+        },
+      ],
     };
   },
 

@@ -82,11 +82,7 @@ export interface CurrentSeason {
   ending_at: string | null;
 }
 
-export interface LeagueStatisticsResponse {
-  league: {
-    id: number;
-    name: string;
-  };
+export interface LeagueSeasonStatistics {
   season: {
     id: number;
     name: string;
@@ -95,8 +91,6 @@ export interface LeagueStatisticsResponse {
     matches_played: number | null;
     total_goals: number | null;
     average_goals_per_match: number | null;
-    yellow_cards: number | null;
-    red_cards: number | null;
   };
   scoring: {
     home_goals_percentage: number | null;
@@ -105,9 +99,19 @@ export interface LeagueStatisticsResponse {
     under_25_percentage: number | null;
   };
   discipline: {
+    yellow_cards: number | null;
+    red_cards: number | null;
     average_yellow_cards: number | null;
     average_red_cards: number | null;
   };
+}
+
+export interface LeagueStatisticsResponse {
+  league: {
+    id: number;
+    name: string;
+  };
+  seasons: LeagueSeasonStatistics[];
 }
 
 export interface MatchTeam {
