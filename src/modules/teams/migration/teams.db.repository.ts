@@ -1,20 +1,17 @@
-import { eq, ilike, sql } from "drizzle-orm"
-import { db } from "../../../../db"
-import { teams } from "../../../../db/schema/teams"
-import { countries } from "../../../../db/schema/countries"
-import {
-  TeamsListResponse, 
-  TeamCard
-} from "../teams.types"
+import { eq, ilike, sql } from "drizzle-orm";
+import { TeamsListResponse, TeamCard } from "./teams.types";
+import { teams } from "@/db/schema/teams";
+import { db } from "@/db";
+import { countries } from "@/db/schema/countries";
 
 export const getTeamsFromDb = async (
   page: number,
   limit: number,
   search?: string
 ): Promise<TeamsListResponse> => {
-  const offset = (page - 1) * limit
+  const offset = (page - 1) * limit;
 
-  const where = search ? ilike(teams.name, `%${search}%`) : undefined
+  const where = search ? ilike(teams.name, `%${search}%`) : undefined;
 
   const data = await db
     .select({
@@ -26,21 +23,21 @@ export const getTeamsFromDb = async (
       stadium_name: teams.venueName,
       country_name: countries.name,
       country_code: countries.iso2,
-      country_flag: countries.flag
+      country_flag: countries.flag,
     })
     .from(teams)
     .leftJoin(countries, eq(teams.countryId, countries.id))
     .where(where)
     .limit(limit)
-    .offset(offset)
+    .offset(offset);
 
   const [{ count }] = await db
     .select({ count: sql<number>`count(*)` })
     .from(teams)
-    .where(where)
+    .where(where);
 
   return {
-    data: data.map(t => ({
+    data: data.map((t) => ({
       id: t.id,
       name: t.name,
       short_code: t.short_code,
@@ -48,22 +45,22 @@ export const getTeamsFromDb = async (
       founded: t.founded,
       stadium: {
         name: t.stadium_name,
-        capacity: null
+        capacity: null,
       },
       country: {
         name: t.country_name,
         code: t.country_code,
-        flag: t.country_flag
-      }
+        flag: t.country_flag,
+      },
     })),
     pagination: {
       page,
       limit,
       total: Number(count),
-      has_next: page * limit < Number(count)
-    }
-  }
-}
+      has_next: page * limit < Number(count),
+    },
+  };
+};
 
 export const getTeamProfileFromDb = async (
   teamId: number
@@ -78,14 +75,14 @@ export const getTeamProfileFromDb = async (
       stadium_name: teams.venueName,
       country_name: countries.name,
       country_code: countries.iso2,
-      country_flag: countries.flag
+      country_flag: countries.flag,
     })
     .from(teams)
     .leftJoin(countries, eq(teams.countryId, countries.id))
     .where(eq(teams.id, teamId))
-    .then(r => r[0])
+    .then((r) => r[0]);
 
-  if (!row) return null
+  if (!row) return null;
 
   return {
     id: row.id,
@@ -95,12 +92,12 @@ export const getTeamProfileFromDb = async (
     founded: row.founded,
     stadium: {
       name: row.stadium_name,
-      capacity: null
+      capacity: null,
     },
     country: {
       name: row.country_name,
       code: row.country_code,
-      flag: row.country_flag
-    }
-  }
-}
+      flag: row.country_flag,
+    },
+  };
+};

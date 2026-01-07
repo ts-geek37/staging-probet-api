@@ -2,7 +2,7 @@ import {
   PlayerMatchesResponse,
   PlayerProfileResponse,
   PlayerSeasonStatsResponse,
-} from "../players.types";
+} from "./players.types";
 import { PlayersRepository } from "./players.repository";
 
 export const mockPlayerProfiles: Record<number, PlayerProfileResponse> = {

@@ -1,7 +1,7 @@
+import { MatchListStatus } from "@/modules/matches/matches.types";
+import { badRequest, notFound, success } from "@/utils";
 import { Request } from "express";
-import { badRequest, notFound, success } from "../../../utils";
- import { LeaguesService } from "./leagues.service";
-import { MatchListStatus } from "../../matches/matches.types";
+import { LeaguesService } from "./leagues.service";
 
 export class LeaguesController {
   constructor(private readonly service: LeaguesService) {}

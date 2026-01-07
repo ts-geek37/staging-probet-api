@@ -2,7 +2,7 @@ import {
   PlayerMatchesResponse,
   PlayerProfileResponse,
   PlayerSeasonStatsResponse,
-} from "../players.types";
+} from "./players.types";
 
 export interface PlayersRepository {
   getPlayerProfile: (playerId: number) => Promise<PlayerProfileResponse | null>;

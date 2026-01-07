@@ -5,7 +5,7 @@ import {
   LeaguesListResponse,
   LeagueStandingsResponse,
   LeagueStatisticsResponse,
-} from "../leagues.types";
+} from "./leagues.types";
 import { LeaguesRepository } from "./leagues.repository";
 
 export const mockLeaguesData: LeagueCard[] = [

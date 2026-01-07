@@ -1,13 +1,12 @@
+import { handler } from "@/utils";
 import { Router } from "express";
-import { handler } from "../../../utils";
 import { LeaguesController } from "./leagues.controller";
 import { LeaguesService } from "./leagues.service";
 import {
   getLeagueProfileFromDb,
   getLeaguesFromDb,
-} from "./repositories/leagues.db.repository";
-import { LeaguesSportMonksRepository } from "./repositories/leagues.sportmonks.repository";
-import { mockLeaguesRepository } from "./repositories/leagues.mock.repository";
+} from "./leagues.db.repository";
+import { mockLeaguesRepository } from "./leagues.mock.repository";
 
 const router = Router();
 
@@ -16,7 +15,7 @@ const dbRepo = {
   getLeagueProfile: getLeagueProfileFromDb,
 };
 
-const leaguesRepo = mockLeaguesRepository
+const leaguesRepo = mockLeaguesRepository;
 // const leaguesRepo = LeaguesSportMonksRepository(dbRepo);
 
 const leaguesService = new LeaguesService(leaguesRepo);

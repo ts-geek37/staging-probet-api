@@ -4,7 +4,7 @@ import {
   TeamPlayersResponse,
   TeamSeasonStatsResponse,
   TeamsListResponse,
-} from "../teams.types";
+} from "./teams.types";
 
 export interface TeamsRepository {
   getTeams: (

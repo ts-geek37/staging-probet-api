@@ -1,3 +1,5 @@
+import { MatchListItem } from "@/modules/matches/migration/matches.types";
+
 export interface TeamCard {
   id: number;
   name: string;
@@ -79,52 +81,17 @@ export interface TeamPlayersResponse {
   players: TeamPlayer[];
 }
 
-export type MatchStatus = "UPCOMING" | "LIVE" | "FT";
-
-export interface MatchTeam {
-  id: number;
-  name: string;
-  logo: string | null;
-}
-
-export interface MatchTeams {
-  home: MatchTeam;
-  away: MatchTeam;
-}
-
-export interface MatchScore {
-  home: number | null;
-  away: number | null;
-}
-
-export interface MatchListItem {
-  id: number;
-  kickoff_time: string;
-  status: MatchStatus;
-
-  league: {
-    id: number;
-    name: string;
-    logo: string | null;
-  };
-
-  teams: MatchTeams;
-  score?: MatchScore;
-}
-
 export interface TeamMatchesResponse {
   latest: MatchListItem[];
   upcoming: MatchListItem[];
 }
-
- 
 
 export interface TeamSeasonStatsItem {
   season: {
     id: number;
     name: string;
   };
-    stats?: {
+  stats?: {
     games_played?: number | null;
 
     goals_for?: number | null;

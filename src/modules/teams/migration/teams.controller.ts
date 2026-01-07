@@ -1,5 +1,5 @@
 import { Request } from "express";
-import { badRequest, notFound, success } from "../../../utils";
+import { badRequest, notFound, success } from "@/utils";
 import { TeamsService } from "./teams.service";
 
 export class TeamsController {

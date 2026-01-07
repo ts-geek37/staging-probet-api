@@ -1,9 +1,12 @@
+import "dotenv/config";
+
+import {
+  SportMonksClient,
+  SportMonksCountry,
+  SportMonksResponse,
+} from "@/integrations/sportmonks";
 import { db } from "../index";
-import { SportMonksClient } from "../../integrations/sportmonks/sportmonks.client";
 import { countries } from "../schema/countries";
-import { SportMonksResponse } from "../../integrations/sportmonks/sportmonks.types";
- import "dotenv/config";
-import { SportMonksCountry } from "../../integrations/sportmonks/entities";
 
 export const seedCountries = async () => {
   const client = new SportMonksClient();

@@ -4,7 +4,7 @@ import {
   LeagueResponse,
   LeagueView,
 } from "../leagues.types";
-import { LeaguesRepository } from "./leagues.repository";
+import { LeaguesRepository } from "../leagues.repository";
 
 export class LeaguesMockRepository implements LeaguesRepository {
   async getLeagueById(

@@ -1,31 +1,32 @@
-import { db } from "../index"
-import { teams } from "../schema/teams"
-import { SportMonksClient } from "../../integrations/sportmonks/sportmonks.client"
-import { SportMonksResponse } from "../../integrations/sportmonks/sportmonks.types"
- import "dotenv/config";
-import { SportMonksTeam } from "../../integrations/sportmonks/entities";
+import {
+  SportMonksClient,
+  SportMonksResponse,
+  SportMonksTeam,
+} from "@/integrations/sportmonks";
+import { db } from "../index";
+import { teams } from "../schema/teams";
 
 export const seedTeams = async () => {
-  const client = new SportMonksClient()
+  const client = new SportMonksClient();
 
   const response = await client.get<SportMonksResponse<SportMonksTeam[]>>(
     "/football/teams",
     { include: "venue" }
-  )
+  );
 
   const values = response.data
-    .filter(t => t.country_id)
-    .map(t => ({
+    .filter((t) => t.country_id)
+    .map((t) => ({
       id: t.id,
       name: t.name,
       shortCode: t.short_code,
       logo: t.image_path,
       countryId: t.country_id!,
       venueName: t.venue?.name ?? null,
-      foundedYear: t.founded
-    }))
+      foundedYear: t.founded,
+    }));
 
-  if (values.length === 0) return
+  if (values.length === 0) return;
 
   await db
     .insert(teams)
@@ -39,7 +40,7 @@ export const seedTeams = async () => {
         countryId: teams.countryId,
         venueName: teams.venueName,
         foundedYear: teams.foundedYear,
-        updatedAt: new Date()
-      }
-    })
-}
+        updatedAt: new Date(),
+      },
+    });
+};

@@ -1,4 +1,4 @@
-import { LeaguesRepository } from "./repositories/leagues.repository";
+import { LeaguesRepository } from "./leagues.repository";
 
 export class LeaguesService {
   constructor(private readonly repo: LeaguesRepository) {}
