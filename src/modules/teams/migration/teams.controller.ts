@@ -55,7 +55,6 @@ export class TeamsController {
     const data = await this.service.getTeamStats(teamId);
     if (!data) throw notFound("Team not found");
 
-    return success(data);  
+    return success(data);
   };
-
 }

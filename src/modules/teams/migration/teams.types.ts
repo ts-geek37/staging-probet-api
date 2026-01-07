@@ -117,26 +117,56 @@ export interface TeamMatchesResponse {
   upcoming: MatchListItem[];
 }
 
-export interface TeamSeasonStatsResponse {
+ 
+
+export interface TeamSeasonStatsItem {
   season: {
     id: number;
     name: string;
   };
+    stats?: {
+    games_played?: number | null;
+
+    goals_for?: number | null;
+    goals_against?: number | null;
+
+    wins?: number | null;
+    draws?: number | null;
+    losses?: number | null;
+
+    shots?: number | null;
+    corners?: number | null;
+    attacks?: number | null;
+    dangerous_attacks?: number | null;
+
+    possession?: number | null;
+    rating?: number | null;
+
+    yellow_cards?: number | null;
+    red_cards?: number | null;
+
+    minutes_played?: number | null;
+    expected_goals?: number | null;
+
+    clean_sheets?: number | null;
+    failed_to_score?: number | null;
+
+    average_player_age?: number | null;
+    average_player_height?: number | null;
+    foreign_players?: number | null;
+
+    points_per_game?: number | null;
+  };
+}
+
+export interface TeamSeasonStatsResponse {
   team: {
     id: number;
     name: string;
     logo: string | null;
   };
-  stats: {
-    goals_for?: number | null;
-    goals_against?: number | null;
-    shots?: number | null;
-    yellow_cards?: number | null;
-    red_cards?: number | null;
-    minutes_played?: number | null;
-  };
+  seasons: TeamSeasonStatsItem[];
 }
-
 
 export interface SportMonksTeamSeasonStatistic {
   id: number;

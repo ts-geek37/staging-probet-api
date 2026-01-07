@@ -96,54 +96,51 @@ export const LeaguesSportMonksRepository = (baseRepo: {
     };
   };
   const getLeagueStatistics = async (
-    leagueId: number
-  ): Promise<LeagueStatisticsResponse | null> => {
-    const header = await getLeagueProfileFromDb(leagueId);
-    if (!header) return null;
+  leagueId: number
+): Promise<LeagueStatisticsResponse | null> => {
+  const header = await getLeagueProfileFromDb(leagueId);
+  if (!header) return null;
 
-    const client = new SportMonksClient();
+  const client = new SportMonksClient();
 
-    const season = await resolveCurrentSeason(leagueId, client);
-    if (!season) return null;
+   const seasonsRes = await client.get<
+    SportMonksResponse<{ id: number; name: string }[]>
+  >(`/football/seasons`, {
+    filters: `league:${leagueId}`,
+    order: "desc",
+    per_page: 3,
+  });
 
+  const seasons = seasonsRes.data ?? [];
+  if (seasons.length === 0) return null;
+
+  const seasonStats = [];
+
+  for (const season of seasons) {
     const res = await client.get<
       SportMonksResponse<{
-        statistics: {
-          type_id: number;
-          value: any;
-        }[];
+        statistics?: { type_id: number; value: any }[];
       }>
     >(`/football/seasons/${season.id}`, {
       include: "statistics",
     });
 
     const stats = res.data.statistics ?? [];
-
     const byType = new Map(stats.map((s) => [s.type_id, s.value]));
 
-    const matchesPlayed = byType.get(188)?.played ?? null;
-
     const goals = byType.get(191);
-
     const cards = byType.get(193);
-
     const overUnder = byType.get(197);
 
-    return {
-      league: {
-        id: header.id,
-        name: header.name,
-      },
+    seasonStats.push({
       season: {
         id: season.id,
         name: season.name,
       },
       overview: {
-        matches_played: matchesPlayed,
+        matches_played: byType.get(188)?.played ?? null,
         total_goals: goals?.total ?? null,
         average_goals_per_match: goals?.average ?? null,
-        yellow_cards: cards?.yellowcards ?? null,
-        red_cards: cards?.redcards ?? null,
       },
       scoring: {
         home_goals_percentage: goals?.home?.percentage ?? null,
@@ -152,11 +149,23 @@ export const LeaguesSportMonksRepository = (baseRepo: {
         under_25_percentage: overUnder?.under?.["2_5"]?.percentage ?? null,
       },
       discipline: {
+        yellow_cards: cards?.yellowcards ?? null,
+        red_cards: cards?.redcards ?? null,
         average_yellow_cards: cards?.average_yellowcards ?? null,
         average_red_cards: cards?.average_redcards ?? null,
       },
-    };
+    });
+  }
+
+  return {
+    league: {
+      id: header.id,
+      name: header.name, 
+    },
+    seasons: seasonStats,
   };
+};
+
 
   const getLeagueMatches = async (
     leagueId: number,
