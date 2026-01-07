@@ -25,7 +25,7 @@ const controller = new LeaguesController(leaguesService);
 router.get("/", handler(controller.getLeagues));
 router.get("/:id/profile", handler(controller.getLeagueProfile));
 router.get("/:id/standings", handler(controller.getLeagueStandings));
-router.get("/:id/statistics", handler(controller.getLeagueStatistics));
+router.get("/:id/stats", handler(controller.getLeagueStatistics));
 router.get("/:id/matches", handler(controller.getLeagueMatches));
 
 export default router;

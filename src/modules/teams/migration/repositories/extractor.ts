@@ -86,7 +86,7 @@ export const PLAYER_STAT_EXTRACTORS: Record<
 
 export const TEAM_STAT_EXTRACTORS: Record<
   number,
-  { key: keyof TeamSeasonStatsResponse["stats"]; extract: StatExtractor }
+  { key: string; extract: StatExtractor }
 > = {
   27263: { key: "games_played", extract: total },
 
