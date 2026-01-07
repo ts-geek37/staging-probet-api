@@ -1,5 +1,5 @@
 import { Request } from "express"
-import { badRequest, notFound, success } from "../../../utils"
+import { badRequest, notFound, success } from "@/utils"
 import { PlayersService } from "./players.service"
 
 export class PlayersController {

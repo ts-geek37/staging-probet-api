@@ -1,9 +1,9 @@
+import { db } from "@/db";
+import { countries } from "@/db/schema/countries";
+import { leagues } from "@/db/schema/leagues";
+import { normalizeCompetitionType } from "@/integrations/sportmonks";
 import { eq, ilike, sql } from "drizzle-orm";
-import { db } from "../../../../db";
-import { leagues } from "../../../../db/schema/leagues";
-import { countries } from "../../../../db/schema/countries";
-import { LeaguesListResponse, LeagueProfileResponse } from "../leagues.types";
-import { normalizeCompetitionType } from "../leagues.normalizer";
+import { LeagueProfileResponse, LeaguesListResponse } from "./leagues.types";
 
 export const getLeaguesFromDb = async (
   page: number,

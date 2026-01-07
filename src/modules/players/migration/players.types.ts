@@ -1,3 +1,5 @@
+import { MatchListItem } from "@/modules/matches/migration/matches.types";
+
 export interface PlayerProfileResponse {
   id: number;
   name: string;
@@ -21,11 +23,13 @@ export interface PlayerProfileResponse {
     name: string | null;
   };
 
-  current_team: {
-    id: number;
-    name: string;
-    logo: string | null;
-  } | null;
+  teams:
+    | {
+        id: number;
+        name: string;
+        logo: string | null;
+      }[]
+    | null;
 }
 
 export interface PlayerSeasonStatsResponse {
@@ -89,43 +93,7 @@ export interface PlayerSeasonStatsResponse {
     losses?: number | null;
   };
 }
-export type MatchStatus = "UPCOMING" | "LIVE" | "FT";
-
- 
-export interface MatchLeagueRef {
-  id: number;
-  name: string;
-  logo: string | null;
-}
- 
-export interface MatchTeamRef {
-  id: number;
-  name: string;
-  logo: string | null;
-}
-
- 
-export interface MatchTeams {
-  home: MatchTeamRef;
-  away: MatchTeamRef;
-}
- 
-export interface MatchScore {
-  home: number | null;
-  away: number | null;
-}
- 
-export interface PlayerMatchItem {
-  id: number;
-  kickoff_time: string;
-  status: MatchStatus;
-
-  league: MatchLeagueRef;
-  teams: MatchTeams;
-
-  score?: MatchScore;
-}
 
 export interface PlayerMatchesResponse {
-  matches: PlayerMatchItem[];
+  matches: MatchListItem[];
 }

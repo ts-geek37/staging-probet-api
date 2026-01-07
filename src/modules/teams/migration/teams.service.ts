@@ -1,4 +1,4 @@
-import { TeamsRepository } from "./repositories/teams.repository";
+import { TeamsRepository } from "./teams.repository";
 
 export class TeamsService {
   constructor(private readonly repo: TeamsRepository) {}

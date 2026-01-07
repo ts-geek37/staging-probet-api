@@ -1,5 +1,5 @@
+import logger from "@/logger";
 import axios, { AxiosInstance } from "axios";
-import logger from "../../logger";
 import { SportMonksError } from "./sportmonks.errors";
 
 type SportMonksClientOptions = {
@@ -42,15 +42,15 @@ export class SportMonksClient {
 
     try {
       const res = await this.client.get(endpoint, { params });
-       logger.info("sportmonks.request.success", {
+      logger.info("sportmonks.request.success", {
         endpoint,
         attempt,
         duration: Date.now() - start,
       });
-      
+
       return res.data;
     } catch (err: any) {
-      console.log('err',err);
+      console.log("err", err);
       const status = err.response?.status;
       logger.warn("sportmonks.request.failure", {
         endpoint,

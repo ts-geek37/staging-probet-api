@@ -1,6 +1,6 @@
-import { SportMonksLeague } from "../../../integrations/sportmonks/entities";
-import { SportMonksClient } from "../../../integrations/sportmonks/sportmonks.client";
-import { SportMonksResponse } from "../../../integrations/sportmonks/sportmonks.types";
+import { SportMonksLeague } from "@/integrations/sportmonks/entities";
+import { SportMonksClient } from "@/integrations/sportmonks/sportmonks.client";
+import { SportMonksResponse } from "@/integrations/sportmonks/sportmonks.types";
 import { CurrentSeason } from "./leagues.types";
 
 const CACHE_TTL = 60 * 60 * 1000;
@@ -56,7 +56,7 @@ export const resolveCurrentSeason = async (
 
   const normalized = season
     ? {
-        id: 19735,
+        id: season.id,
         name: season.name,
         starting_at: season.starting_at,
         ending_at: season.ending_at,

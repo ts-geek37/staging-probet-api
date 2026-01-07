@@ -4,7 +4,7 @@ import {
   TeamOverviewResponse,
   TeamMatchesResponse,
   TeamSeasonStatsResponse,
-} from "../teams.types";
+} from "./teams.types";
 import { TeamsRepository } from "./teams.repository";
 
 export const mockTeams: TeamsListResponse["data"] = [

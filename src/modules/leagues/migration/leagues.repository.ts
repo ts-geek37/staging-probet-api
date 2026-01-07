@@ -4,7 +4,7 @@ import {
   LeaguesListResponse,
   LeagueStandingsResponse,
   LeagueStatisticsResponse,
-} from "../leagues.types";
+} from "./leagues.types";
 
 export interface LeaguesRepository {
   getLeagues: (

@@ -1,14 +1,14 @@
 import { Router } from "express";
-import { handler } from "../../../utils";
+import { handler } from "@/utils";
 import { PlayersController } from "./players.controller";
 import { PlayersService } from "./players.service";
-import { PlayersSportMonksRepository } from "./repositories/players.sportsmonk.repository";
-import { mockPlayersRepository } from "./repositories/players.mock.repository";
+import { PlayersSportMonksRepository } from "./players.sportmonks.repository";
+import { mockPlayersRepository } from "./players.mock.repository";
 
 const router = Router();
 
 // const repo = PlayersSportMonksRepository();
-const repo = mockPlayersRepository
+const repo = mockPlayersRepository;
 const service = new PlayersService(repo);
 const controller = new PlayersController(service);
 

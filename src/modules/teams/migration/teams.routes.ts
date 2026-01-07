@@ -1,12 +1,10 @@
 import { Router } from "express";
-import { handler } from "../../../utils";
-import {
-  getTeamProfileFromDb,
-  getTeamsFromDb,
-} from "./repositories/teams.db.repository";
-import { mockTeamsRepository } from "./repositories/teams.mock.repository";
+import { handler } from "@/utils";
+import { getTeamProfileFromDb, getTeamsFromDb } from "./teams.db.repository";
+import { mockTeamsRepository } from "./teams.mock.repository";
 import { TeamsController } from "./teams.controller";
 import { TeamsService } from "./teams.service";
+import { TeamsSportMonksRepository } from "./teams.sportmonks.repository";
 
 const router = Router();
 

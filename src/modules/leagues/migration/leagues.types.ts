@@ -1,3 +1,5 @@
+import { MatchListItem } from "@/modules/matches/migration/matches.types";
+
 export interface LeagueCard {
   id: number;
   name: string;
@@ -132,11 +134,5 @@ export interface LeagueMatchesResponse {
     id: number;
     name: string;
   };
-  matches: {
-    id: number;
-    kickoff_time: string;
-    status: string;
-    home_team: MatchTeam;
-    away_team: MatchTeam;
-  }[];
+  matches: MatchListItem[];
 }
