@@ -1,5 +1,6 @@
 import { Response as ExpressResponse, Request } from "express";
 
+import logger from "@/logger";
 import { Response } from "../types";
 
 type ControllerFn = (req: Request) => Promise<Response<any> | void>;
@@ -40,19 +41,22 @@ export const handler = (fn: ControllerFn) => {
       }
 
       return res.status(result.status).json(result.body);
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        return res.status((err as any).status || 500).json({
-          success: false,
-          data: null,
-          error: err.message,
-        });
-      }
+    } catch (err: any) {
+      logger.error("controller.error", {
+        path: req.originalUrl,
+        message: err.message,
+        stack: err.stack,
+      });
 
-      return res.status(500).json({
+      const status = typeof err.status === "number" ? err.status : 500;
+
+      return res.status(status).json({
         success: false,
         data: null,
-        error: "Internal server error",
+        error:
+          status >= 500
+            ? "Internal server error"
+            : err.message ?? "Request failed",
       });
     }
   };

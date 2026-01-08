@@ -1,5 +1,5 @@
 import logger from "@/logger";
-import axios, { AxiosInstance } from "axios";
+import axios, { AxiosError, AxiosInstance } from "axios";
 import { SportMonksError } from "./sportmonks.errors";
 
 type SportMonksClientOptions = {
@@ -33,6 +33,14 @@ export class SportMonksClient {
   private isRetryableStatus = (status?: number) =>
     status === 429 || (status !== undefined && status >= 500);
 
+  private extractRateLimitInfo = (headers?: Record<string, any>) => {
+    if (!headers) return null;
+    return {
+      limit: headers["x-ratelimit-limit"] ?? null,
+      remaining: headers["x-ratelimit-remaining"] ?? null,
+    };
+  };
+
   private request = async <T>(
     endpoint: string,
     params?: Record<string, unknown>,
@@ -42,33 +50,50 @@ export class SportMonksClient {
 
     try {
       const res = await this.client.get(endpoint, { params });
+
       logger.info("sportmonks.request.success", {
         endpoint,
         attempt,
-        duration: Date.now() - start,
+        duration_ms: Date.now() - start,
+        rate_limit: this.extractRateLimitInfo(res.headers),
       });
 
       return res.data;
-    } catch (err: any) {
-      console.log("err", err);
+    } catch (error) {
+      const err = error as AxiosError<any>;
       const status = err.response?.status;
-      logger.warn("sportmonks.request.failure", {
+      const headers = err.response?.headers;
+      const rateLimit = this.extractRateLimitInfo(headers);
+      const duration = Date.now() - start;
+
+      const willRetry =
+        this.isRetryableStatus(status) && attempt < this.maxRetries;
+
+      const logPayload = {
         endpoint,
         attempt,
+        max_retries: this.maxRetries,
         status,
-        duration: Date.now() - start,
-      });
+        axios_code: err.code,
+        message: err.response?.data?.message ?? err.message,
+        duration_ms: duration,
+        rate_limit: rateLimit,
+        will_retry: willRetry,
+      };
 
-      if (!this.isRetryableStatus(status) || attempt >= this.maxRetries) {
-        throw new SportMonksError(
-          err.message || "SportMonks request failed",
-          endpoint,
-          status
-        );
+      if (willRetry) {
+        logger.warn("sportmonks.request.retry", logPayload);
+        await this.sleep(300 * attempt);
+        return this.request(endpoint, params, attempt + 1);
       }
 
-      await this.sleep(300 * attempt);
-      return this.request(endpoint, params, attempt + 1);
+      logger.error("sportmonks.request.failed", logPayload);
+
+      throw new SportMonksError(
+        err.response?.data?.message || "SportMonks request failed",
+        endpoint,
+        status
+      );
     }
   };
 

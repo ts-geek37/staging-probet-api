@@ -64,26 +64,21 @@ export const normalizeForm = (
 };
 
 const EVENT_TYPE_ID_MAP: Record<number, MatchEventType> = {
-  // Goals
   14: "GOAL",
   15: "OWN_GOAL",
   16: "PENALTY_GOAL",
 
-  // Cards
-  17: "CARD", // yellow
-  18: "CARD", // red
-  19: "CARD", // second yellow
+  17: "CARD",
+  18: "CARD",
+  19: "CARD",
 
-  // Substitutions
   20: "SUBSTITUTION",
 
-  // Period markers / system
-  1: "PERIOD_START", // match started
-  2: "PERIOD_END", // half time
-  3: "PERIOD_START", // second half started
-  4: "PERIOD_END", // match finished
+  1: "PERIOD_START",
+  2: "PERIOD_END",
+  3: "PERIOD_START",
+  4: "PERIOD_END",
 
-  // VAR
   70: "VAR",
 };
 
@@ -95,7 +90,6 @@ export const normalizeEventType = (
   const mapped = EVENT_TYPE_ID_MAP[typeId];
   if (mapped) return mapped;
 
-  console.warn("[match.events] unknown event type_id", typeId);
   return "OTHER";
 };
 
