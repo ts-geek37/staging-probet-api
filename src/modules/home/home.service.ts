@@ -1,9 +1,10 @@
-import { HomeRepository } from "./repositories/home.repository";
+import { HomeRepository } from "./home.repository";
+import { HomeResponse } from "./home.types";
 
 export class HomeService {
   constructor(private readonly repo: HomeRepository) {}
 
-  async getHome() {
+  getHome(): Promise<HomeResponse> {
     return this.repo.getHomeData();
   }
 }
