@@ -4,7 +4,7 @@ import {
   SportMonksClient,
   SportMonksCountry,
   SportMonksResponse,
-} from "@/integrations/sportmonks";
+} from "../../integrations/sportmonks";
 import { db } from "../index";
 import { countries } from "../schema/countries";
 

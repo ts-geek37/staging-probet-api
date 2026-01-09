@@ -2,7 +2,7 @@ import {
   SportMonksClient,
   SportMonksLeague,
   SportMonksResponse,
-} from "@/integrations/sportmonks";
+} from "../../integrations/sportmonks";
 import { db } from "../index";
 import { leagues } from "../schema/leagues";
 

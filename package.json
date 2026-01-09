@@ -5,24 +5,26 @@
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "clean": "rm -rf dist",
-    "build": "npm run clean && tsc",
+    "build": "npm run clean && tsc && tsc-alias",
     "start": "node dist/index.js",
     "typecheck": "tsc --noEmit",
     "setup:db": "node -r dotenv/config ./scripts/setup_db.ts",
     "db:generate": "drizzle-kit generate --config ./src/drizzle.config.ts",
     "db:push": "drizzle-kit push --config ./src/drizzle.config.ts",
-    "db:seed": "ts-node src/db/seed/seed.ts"
+    "db:seed": "tsx src/db/seed/seed.ts",
+    "db:seed-prices": "tsx src/db/seed/seed.prices.ts"
   },
   "dependencies": {
     "@clerk/backend": "^2.29.0",
+    "@clerk/clerk-sdk-node": "^4.13.23",
     "axios": "^1.13.2",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "drizzle-orm": "^0.45.1",
     "express": "^5.2.1",
     "pg": "^8.16.3",
+    "stripe": "^20.1.2",
     "svix": "^1.84.1",
-    "tsconfig-paths": "^4.2.0",
     "winston": "^3.19.0"
   },
   "devDependencies": {
@@ -33,6 +35,7 @@
     "@types/winston": "^2.4.4",
     "drizzle-kit": "^0.31.8",
     "ts-node": "^10.9.2",
+    "tsc-alias": "^1.8.16",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3"
   }
