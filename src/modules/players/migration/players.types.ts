@@ -94,6 +94,14 @@ export interface PlayerSeasonStatsResponse {
   };
 }
 
+export interface PlayerMatches {
+  matches: MatchListItem[];
+}
 export interface PlayerMatchesResponse {
   matches: MatchListItem[];
+  pagination: {
+    page: number;
+    limit: number;
+    total_pages: number;
+  };
 }
