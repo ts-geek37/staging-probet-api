@@ -201,7 +201,7 @@ export const mockPlayersRepository: PlayersRepository = {
       pagination: {
         page,
         limit,
-        total_item: data.matches.length,
+        count: data.matches.length,
         total_pages: Math.ceil(data.matches.length / limit),
       },
     };

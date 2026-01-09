@@ -84,7 +84,7 @@ export const PlayersSportMonksRepository = (): PlayersRepository => {
       pagination: {
         page: res.pagination?.current_page ?? page,
         limit: res.pagination?.per_page ?? limit,
-        total_item: res.pagination?.count ?? matches.length,
+        count: res.pagination?.count ?? matches.length,
         total_pages: Math.ceil(
           (res.pagination?.count ?? matches.length) /
             (res.pagination?.per_page ?? limit)

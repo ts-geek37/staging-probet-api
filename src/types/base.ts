@@ -10,6 +10,6 @@ export interface Response<T> {
 export interface PaginationMeta {
   page: number;
   limit: number;
-  total_item: number;
+  count: number;
   total_pages: number;
 }

@@ -80,8 +80,8 @@ export class MatchesMockRepository implements MatchesRepository {
       pagination: {
         page,
         limit,
-        total: leagueFiltered.length,
-        has_next: start + limit < leagueFiltered.length,
+        count: leagueFiltered.length,
+        total_pages: Math.ceil(leagueFiltered.length / limit),
       },
     };
   }

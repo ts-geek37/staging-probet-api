@@ -1,5 +1,5 @@
-import { PaginationMeta } from "@/types";
 import { MatchListItem } from "@/modules/matches/migration/matches.types";
+import { PaginationMeta } from "@/types";
 
 export interface TeamCard {
   id: number;
@@ -25,9 +25,6 @@ export interface TeamsListResponse {
   data: TeamCard[];
   pagination: PaginationMeta;
 }
-
-/* Team Overview */
-/* ---------------------------------- */
 
 export interface TeamOverviewResponse {
   id: number;

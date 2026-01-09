@@ -1,3 +1,5 @@
+import { PaginationMeta } from "@/types";
+
 export enum TeamDetailView {
   OVERVIEW = "overview",
   MATCHES = "matches",
@@ -7,12 +9,7 @@ export enum TeamDetailView {
 
 export interface TeamListResponse {
   data: TeamCard[];
-  pagination: {
-    page: number;
-    limit: number;
-    total: number;
-    has_next: boolean;
-  };
+  pagination: PaginationMeta;
 }
 
 export interface TeamCard {

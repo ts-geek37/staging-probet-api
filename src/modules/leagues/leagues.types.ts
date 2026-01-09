@@ -1,3 +1,5 @@
+import { PaginationMeta } from "@/types";
+
 export interface LeagueResponse {
   league: LeagueHeader;
   recent?: LeagueMatch[];
@@ -114,11 +116,4 @@ export interface LeagueListItem {
   season: string;
   logo: string;
   country_flag: string;
-}
-
-export interface PaginationMeta {
-  page: number;
-  limit: number;
-  total: number;
-  has_next: boolean;
 }

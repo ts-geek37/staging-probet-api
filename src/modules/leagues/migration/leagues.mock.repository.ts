@@ -142,7 +142,7 @@ export const mockLeaguesRepository: LeaguesRepository = {
       pagination: {
         page,
         limit,
-        total_item: data.length,
+        count: data.length,
         total_pages: Math.ceil(data.length / limit),
       },
     };

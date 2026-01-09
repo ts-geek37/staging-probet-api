@@ -1,16 +1,16 @@
 import {
-    normalizeFixtureStatus,
-    SportMonksFixture,
-    SportMonksSquadMember,
-    SportMonksTeam,
-    TEAM_STAT_EXTRACTORS,
+  normalizeFixtureStatus,
+  SportMonksFixture,
+  SportMonksSquadMember,
+  SportMonksTeam,
+  TEAM_STAT_EXTRACTORS,
 } from "@/integrations/sportmonks";
 import {
-    SportMonksTeamSeasonStatistic,
-    TeamMatchesResponse,
-    TeamOverviewResponse,
-    TeamPlayersResponse,
-    TeamSeasonStatsResponse,
+  SportMonksTeamSeasonStatistic,
+  TeamMatchesResponse,
+  TeamOverviewResponse,
+  TeamPlayersResponse,
+  TeamSeasonStatsResponse,
 } from "./teams.types";
 
 export const mapTeamPlayers = (

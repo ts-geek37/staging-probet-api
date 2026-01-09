@@ -234,7 +234,7 @@ export const mockMatchesRepository: MatchesRepository = {
       pagination: {
         page,
         limit,
-        total_item: data.length,
+        count: data.length,
         total_pages: Math.ceil(data.length / limit),
       },
     };
@@ -263,7 +263,8 @@ export const mockMatchesRepository: MatchesRepository = {
       pagination: {
         page,
         limit,
-        has_next: end < data.length,
+        count: data.length,
+        total_pages: Math.ceil(data.length / limit),
       },
     };
   },

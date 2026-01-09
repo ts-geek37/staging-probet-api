@@ -657,8 +657,8 @@ export class LeaguesMockRepository implements LeaguesRepository {
       pagination: {
         page,
         limit,
-        total: filtered.length,
-        has_next: end < filtered.length,
+        count: filtered.length,
+        total_pages: Math.ceil(filtered.length / limit),
       },
     };
   }

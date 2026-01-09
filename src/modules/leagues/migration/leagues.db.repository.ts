@@ -50,7 +50,7 @@ export const getLeaguesFromDb = async (
     pagination: {
       page,
       limit,
-      total_item: Number(count),
+      count: Number(count),
       total_pages: Math.ceil(Number(count) / limit),
     },
   };

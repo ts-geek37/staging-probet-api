@@ -143,9 +143,5 @@ export interface MatchStatsTeam {
 
 export interface PredictableMatchesResponse {
   data: MatchListItem[];
-  pagination: {
-    page: number;
-    limit: number;
-    has_next: boolean;
-  };
+  pagination: PaginationMeta;
 }

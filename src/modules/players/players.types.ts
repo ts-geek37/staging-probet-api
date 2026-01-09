@@ -1,3 +1,5 @@
+import { PaginationMeta } from "@/types";
+
 export enum PlayerDetailView {
   OVERVIEW = "overview",
   STATS = "stats",
@@ -6,12 +8,7 @@ export enum PlayerDetailView {
 
 export interface PlayerListResponse {
   data: PlayerCard[];
-  pagination: {
-    page: number;
-    limit: number;
-    total: number;
-    has_next: boolean;
-  };
+  pagination: PaginationMeta;
 }
 
 export interface PlayerCard {

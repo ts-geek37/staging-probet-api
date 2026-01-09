@@ -71,7 +71,7 @@ export const MatchesSportMonksRepository = (): MatchesRepository => {
       pagination: {
         page: res.pagination?.current_page ?? page,
         limit: res.pagination?.per_page ?? limit,
-        total_item: res.pagination?.count ?? searched.length,
+        count: res.pagination?.count ?? searched.length,
         total_pages: Math.ceil(
           (res.pagination?.count ?? searched.length) /
             (res.pagination?.per_page ?? limit)
@@ -166,7 +166,8 @@ export const MatchesSportMonksRepository = (): MatchesRepository => {
       pagination: {
         page,
         limit,
-        has_next: res.pagination?.has_more ?? false,
+        count: mapped.length,
+        total_pages: Math.ceil(mapped.length / limit),
       },
     };
   };
