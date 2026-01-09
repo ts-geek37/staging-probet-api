@@ -1,4 +1,5 @@
 import { MatchListItem } from "@/modules/matches/migration/matches.types";
+import { PaginationMeta } from "@/types";
 
 export interface PlayerProfileResponse {
   id: number;
@@ -94,6 +95,10 @@ export interface PlayerSeasonStatsResponse {
   };
 }
 
+export interface PlayerMatches {
+  matches: MatchListItem[];
+}
 export interface PlayerMatchesResponse {
   matches: MatchListItem[];
+  pagination: PaginationMeta;
 }

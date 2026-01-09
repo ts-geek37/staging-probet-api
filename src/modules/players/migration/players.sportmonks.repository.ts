@@ -50,7 +50,9 @@ export const PlayersSportMonksRepository = (): PlayersRepository => {
   };
 
   const getPlayerMatches = async (
-    playerId: number
+    playerId: number,
+    page: number,
+    limit: number
   ): Promise<PlayerMatchesResponse> => {
     const now = new Date();
 
@@ -65,15 +67,30 @@ export const PlayersSportMonksRepository = (): PlayersRepository => {
       {
         include: "participants;league;scores;state",
         participantsearch: playerId,
-        order: "asc", 
+        order: "asc",
+        page,
+        per_page: limit,
       }
     );
 
     const matches = (res.data ?? [])
-      .map((f) => mapPlayerMatch(f, normalizeFixtureStatus(f.state_id)))
-      .filter(Boolean);
+      .map((f: SportMonksFixture) =>
+        mapPlayerMatch(f, normalizeFixtureStatus(f.state_id))
+      )
+      .filter((m): m is any => !!m);
 
-    return { matches };
+    return {
+      matches,
+      pagination: {
+        page: res.pagination?.current_page ?? page,
+        limit: res.pagination?.per_page ?? limit,
+        total_item: res.pagination?.count ?? matches.length,
+        total_pages: Math.ceil(
+          (res.pagination?.count ?? matches.length) /
+            (res.pagination?.per_page ?? limit)
+        ),
+      },
+    };
   };
 
   return {

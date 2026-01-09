@@ -1,6 +1,6 @@
 import { PlayersRepository } from "./players.repository";
 import {
-  PlayerMatchesResponse,
+  PlayerMatches,
   PlayerProfileResponse,
   PlayerSeasonStatsResponse,
 } from "./players.types";
@@ -146,7 +146,7 @@ export const mockPlayerSeasonStats: Record<
   ],
 };
 
-export const mockPlayerMatches: Record<number, PlayerMatchesResponse> = {
+export const mockPlayerMatches: Record<number, PlayerMatches> = {
   201: {
     matches: Array.from({ length: 18 }).map((_, i) => ({
       id: 8000 + i,
@@ -198,6 +198,12 @@ export const mockPlayersRepository: PlayersRepository = {
 
     return {
       matches: data.matches.slice(start, end),
+      pagination: {
+        page,
+        limit,
+        total_item: data.matches.length,
+        total_pages: Math.ceil(data.matches.length / limit),
+      },
     };
   },
 };
