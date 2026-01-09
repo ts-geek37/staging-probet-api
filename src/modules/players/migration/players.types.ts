@@ -1,4 +1,5 @@
 import { MatchListItem } from "@/modules/matches/migration/matches.types";
+import { PaginationMeta } from "@/types";
 
 export interface PlayerProfileResponse {
   id: number;
@@ -99,9 +100,5 @@ export interface PlayerMatches {
 }
 export interface PlayerMatchesResponse {
   matches: MatchListItem[];
-  pagination: {
-    page: number;
-    limit: number;
-    total_pages: number;
-  };
+  pagination: PaginationMeta;
 }

@@ -1,3 +1,4 @@
+import { PaginationMeta } from "@/types";
 import { MatchListItem } from "@/modules/matches/migration/matches.types";
 
 export interface LeagueCard {
@@ -14,12 +15,7 @@ export interface LeagueCard {
 
 export interface LeaguesListResponse {
   data: LeagueCard[];
-  pagination: {
-    page: number;
-    limit: number;
-    total: number;
-    has_next: boolean;
-  };
+  pagination: PaginationMeta;
 }
 
 export interface LeagueProfileResponse {

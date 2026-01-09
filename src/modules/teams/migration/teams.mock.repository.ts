@@ -213,8 +213,8 @@ export const mockTeamsRepository: TeamsRepository = {
       pagination: {
         page,
         limit,
-        total: data.length,
-        has_next: end < data.length,
+        total_item: data.length,
+        total_pages: Math.ceil(data.length / limit),
       },
     };
   },

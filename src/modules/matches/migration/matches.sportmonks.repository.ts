@@ -69,9 +69,13 @@ export const MatchesSportMonksRepository = (): MatchesRepository => {
       tab,
       data: searched,
       pagination: {
-        page,
-        limit,
-        has_next: res.pagination?.has_more ?? false,
+        page: res.pagination?.current_page ?? page,
+        limit: res.pagination?.per_page ?? limit,
+        total_item: res.pagination?.count ?? searched.length,
+        total_pages: Math.ceil(
+          (res.pagination?.count ?? searched.length) /
+            (res.pagination?.per_page ?? limit)
+        ),
       },
     };
   };

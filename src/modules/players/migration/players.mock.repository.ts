@@ -2,7 +2,7 @@ import { PlayersRepository } from "./players.repository";
 import {
   PlayerMatches,
   PlayerProfileResponse,
-  PlayerSeasonStatsResponse
+  PlayerSeasonStatsResponse,
 } from "./players.types";
 
 export const mockPlayerProfiles: Record<number, PlayerProfileResponse> = {
@@ -201,6 +201,7 @@ export const mockPlayersRepository: PlayersRepository = {
       pagination: {
         page,
         limit,
+        total_item: data.matches.length,
         total_pages: Math.ceil(data.matches.length / limit),
       },
     };
