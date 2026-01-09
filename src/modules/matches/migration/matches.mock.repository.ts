@@ -1,3 +1,4 @@
+import { MatchesRepository } from "./matches.repository";
 import {
   MatchesListResponse,
   MatchEventsResponse,
@@ -5,8 +6,8 @@ import {
   MatchListFilters,
   MatchListItem,
   MatchStatsResponse,
+  MatchStatus,
 } from "./matches.types";
-import { MatchesRepository } from "./matches.repository";
 
 /* ----------------------------------
    BASE MATCH DATA
@@ -229,6 +230,34 @@ export const mockMatchesRepository: MatchesRepository = {
 
     return {
       tab,
+      data: data.slice(start, end),
+      pagination: {
+        page,
+        limit,
+        has_next: end < data.length,
+      },
+    };
+  },
+
+  getPredictableMatches: async (
+    page: number,
+    limit: number
+  ): Promise<MatchesListResponse> => {
+    const now = new Date();
+
+    const data = allMatches.map((m, i) => ({
+      ...m,
+      kickoff_time: new Date(
+        now.getTime() + (i % 21) * 24 * 60 * 60 * 1000
+      ).toISOString(),
+      status: "UPCOMING" as MatchStatus,
+    }));
+
+    const start = (page - 1) * limit;
+    const end = start + limit;
+
+    return {
+      tab: "UPCOMING",
       data: data.slice(start, end),
       pagination: {
         page,

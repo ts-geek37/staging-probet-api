@@ -136,11 +136,43 @@ export const MatchesSportMonksRepository = (): MatchesRepository => {
     return mapMatchLineups(matchId, res.data);
   };
 
+  const getPredictableMatches = async (page: number, limit: number) => {
+    const now = new Date();
+    const from = formatDate(now);
+
+    const toDate = new Date(now);
+    toDate.setDate(now.getDate() + 21);
+    const to = formatDate(toDate);
+
+    const res = await client.get<SportMonksResponse<SportMonksFixture[]>>(
+      `/football/fixtures/between/${from}/${to}`,
+      {
+        include: "participants;league;season;scores;state",
+        page,
+        per_page: limit,
+      }
+    );
+
+    const mapped = (res.data ?? []).flatMap((f) =>
+      mapFixtureToListItem(f, normalizeFixtureStatus(f.state_id))
+    );
+
+    return {
+      data: mapped,
+      pagination: {
+        page,
+        limit,
+        has_next: res.pagination?.has_more ?? false,
+      },
+    };
+  };
+
   return {
     getMatches,
     getMatchById,
     getMatchStats,
     getMatchLineups,
     getMatchEvents,
+    getPredictableMatches,
   };
 };

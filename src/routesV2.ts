@@ -6,6 +6,7 @@ import { homeRoutes } from "./modules/home";
 import { leaguesRoutes } from "./modules/leagues/migration";
 import { matchesRoutes } from "./modules/matches/migration";
 import { playersRoutes } from "./modules/players/migration";
+import { predictionsRoutes } from "./modules/predictions";
 import { teamsRoutes } from "./modules/teams/migration";
 
 const routesV2 = Router();
@@ -16,6 +17,7 @@ routesV2.use("/matches", publicAuth, matchesRoutes);
 routesV2.use("/players", publicAuth, playersRoutes);
 routesV2.use("/teams", publicAuth, teamsRoutes);
 routesV2.use("/prices", publicAuth, billingPricesRoutes);
+routesV2.use("/predictions", publicAuth, predictionsRoutes);
 routesV2.use("/billing", clerkMiddleware, privateAuth(), billingRoutes);
 
 export default routesV2;
