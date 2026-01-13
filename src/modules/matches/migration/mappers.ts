@@ -6,12 +6,15 @@ import {
   SportMonksFixture,
   SportMonksFixtureStatistic,
   SportMonksLineup,
+  SportMonksParticipant,
+  TEAM_STAT_EXTRACTORS,
 } from "@/integrations/sportmonks";
+import { TeamStatistics } from "@/modules/teams/teams.types";
 import {
   MatchEventsResponse,
   MatchLineupsResponse,
   MatchListItem,
-  MatchStatsResponse, 
+  MatchStatsResponse,
 } from "./matches.types";
 
 export const mapFixtureToListItem = (
@@ -218,4 +221,71 @@ export const mapMatchLineups = (
   });
 
   return { match_id: matchId, teams };
+};
+
+type TeamStatsMap = Partial<
+  Record<(typeof TEAM_STAT_EXTRACTORS)[number]["key"], number>
+>;
+
+export const mapTeamSeasonStats = (
+  teams: SportMonksParticipant[],
+  season_id: number
+): {
+  home: {
+    id: number | null;
+    name: string | null;
+    logo: string | null;
+    stats: TeamStatistics | null;
+  };
+  away: {
+    id: number | null;
+    name: string | null;
+    logo: string | null;
+    stats: TeamStatistics | null;
+  };
+} => {
+  const extractStats = (
+    participant?: SportMonksParticipant
+  ): TeamStatistics | null => {
+    if (!participant?.statistics?.length) return null;
+
+    const seasonStats = participant.statistics.find(
+      (s) => s.season_id === season_id
+    );
+
+    if (!seasonStats?.details?.length) return null;
+
+    const stats: Partial<TeamStatistics> = {};
+
+    for (const detail of seasonStats.details) {
+      const extractor = TEAM_STAT_EXTRACTORS[detail.type_id];
+      if (!extractor) continue;
+
+      const value = extractor.extract(detail.value);
+
+      if (value !== null && value !== undefined) {
+        stats[extractor.key as any] = value;
+      }
+    }
+
+    return Object.keys(stats).length > 0 ? (stats as TeamStatistics) : null;
+  };
+
+  const home = teams.find((t) => t.meta?.location === "home");
+  const away = teams.find((t) => t.meta?.location === "away");
+
+  return {
+    home: {
+      id: home?.id ?? null,
+      name: home?.name ?? null,
+      logo: home?.image_path ?? null,
+      stats: extractStats(home),
+    },
+    away: {
+      id: away?.id ?? null,
+      name: away?.name ?? null,
+      logo: away?.image_path ?? null,
+      stats: extractStats(away),
+    },
+  };
 };

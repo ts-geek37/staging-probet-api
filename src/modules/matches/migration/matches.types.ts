@@ -1,4 +1,5 @@
 import { MatchStatus } from "@/integrations/sportmonks";
+import { TeamStatistics } from "@/modules/teams/teams.types";
 import { PaginationMeta } from "@/types";
 
 export enum MatchListStatus {
@@ -143,4 +144,19 @@ export interface MatchStatsTeam {
 export interface PredictableMatchesResponse {
   data: MatchListItem[];
   pagination: PaginationMeta;
+}
+
+export interface MatchesTeamStats {
+  away: {
+    id: number;
+    name: string;
+    logo: string | null;
+    stats: TeamStatistics;
+  };
+  home: {
+    id: number;
+    name: string;
+    logo: string | null;
+    stats: TeamStatistics;
+  };
 }

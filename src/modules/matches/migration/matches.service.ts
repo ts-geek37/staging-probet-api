@@ -1,3 +1,4 @@
+import { MatchesRepository } from "./matches.repository";
 import {
   MatchesListResponse,
   MatchEventsResponse,
@@ -5,7 +6,6 @@ import {
   MatchListFilters,
   MatchStatsResponse,
 } from "./matches.types";
-import { MatchesRepository } from "./matches.repository";
 
 export class MatchesService {
   constructor(private readonly repo: MatchesRepository) {}
@@ -27,5 +27,17 @@ export class MatchesService {
 
   getMatchEvents = (matchId: number): Promise<MatchEventsResponse | null> => {
     return this.repo.getMatchEvents(matchId);
+  };
+
+  getMatchComments = (matchId: number) => {
+    return this.repo.getMatchComments(matchId);
+  };
+
+  getHeadToHeadMatches = (teams: { team1: number; team2: number }) => {
+    return this.repo.getHeadToHeadMatches(teams);
+  };
+
+  getMatchesTeamStats = (matchId: number, seasonId: number) => {
+    return this.repo.getTeamStats(matchId, seasonId);
   };
 }
