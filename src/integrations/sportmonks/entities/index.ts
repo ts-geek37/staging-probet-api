@@ -36,6 +36,7 @@ export interface SportMonksParticipant {
   type: "domestic" | "national" | string;
   placeholder: boolean;
   last_played_at: string | null;
+  statistics?: SportMonksTeamStatistics[];
   meta?: {
     location?: "home" | "away";
   };
@@ -184,7 +185,7 @@ export interface SportMonksFixture {
   placeholder: boolean;
   has_odds: boolean;
   has_premium_odds: boolean;
-
+  weatherreport?: SportMonksWeatherReport;
   league?: SportMonksLeague;
   season?: SportMonksSeason;
   venue?: SportMonksVenue;
@@ -194,7 +195,7 @@ export interface SportMonksFixture {
   statistics?: SportMonksFixtureStatistic[];
   events?: SportMonksEvent[];
   lineups?: SportMonksLineup[];
-  comments?: SportsmonkFixtureComment[];
+  comments?: SportMonksFixtureComment[];
 }
 
 export interface SportMonksStandingDetail {
@@ -236,8 +237,11 @@ export interface SportMonksTeamStatistics {
   model_id: number;
   type_id: number;
   relation_id: number | null;
+  season_id: number;
   value: Record<string, any>;
   type: string;
+  teams: SportMonksParticipant[]
+  details?: SportMonksStandingDetail[]
 }
 
 export interface SportMonksCoach {
@@ -365,7 +369,7 @@ export interface SportMonksPlayer {
   };
 
   teams?: {
-    id: number; // pivot id
+    id: number;
     team: {
       id: number;
       name: string;
@@ -537,7 +541,7 @@ export interface SportMonksTrophy {
   name: string;
 }
 
-export interface SportsmonkFixtureComment {
+export interface SportMonksFixtureComment {
   id: number;
   fixture_id: number;
   comment: string;
@@ -546,4 +550,50 @@ export interface SportsmonkFixtureComment {
   is_goal: boolean;
   is_important: boolean;
   order: number;
+}
+
+export interface SportMonksWeatherReport {
+  id: number;
+  fixture_id: number;
+  venue_id: number;
+
+  temperature: SportMonksTemperature;
+  feels_like: SportMonksTemperature;
+
+  wind: SportMonksWind;
+
+  humidity: string;
+  pressure: number;
+  clouds: string;
+
+  description: string;
+  icon: string;
+
+  type: "actual" | "forecast";
+  metric: "celcius" | "fahrenheit";
+
+  current: SportMonksCurrentWeather;
+}
+
+export interface SportMonksTemperature {
+  day: number;
+  morning: number;
+  evening: number;
+  night: number;
+}
+
+export interface SportMonksWind {
+  speed: number;
+  direction: number;
+}
+
+export interface SportMonksCurrentWeather {
+  temp: number;
+  wind: number;
+  clouds: number | null;
+  humidity: string;
+  pressure: number;
+  direction: number;
+  feels_like: number;
+  description: string;
 }

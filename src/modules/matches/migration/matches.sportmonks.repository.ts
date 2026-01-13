@@ -5,6 +5,7 @@ import {
   normalizeFixtureStatus,
   SportMonksClient,
   SportMonksFixture,
+  SportMonksFixtureComment,
   SportMonksResponse,
 } from "@/integrations/sportmonks";
 import {
@@ -12,6 +13,7 @@ import {
   mapMatchEvents,
   mapMatchLineups,
   mapMatchStats,
+  mapTeamSeasonStats,
 } from "./mappers";
 import { MatchesRepository } from "./matches.repository";
 import {
@@ -25,20 +27,40 @@ import {
 export const MatchesSportMonksRepository = (): MatchesRepository => {
   const client = new SportMonksClient();
 
-  const getMatches = async ({ tab, page, limit, q }: MatchListFilters) => {
-    const range = DATE_RANGES[tab];
-
+  const getDateRange = (fromOffset: number, toOffset: number) => {
     const now = new Date();
+
     const fromDate = new Date(now);
-    fromDate.setDate(now.getDate() + range.from);
+    fromDate.setDate(now.getDate() + fromOffset);
 
     const toDate = new Date(now);
-    toDate.setDate(now.getDate() + range.to);
+    toDate.setDate(now.getDate() + toOffset);
 
-    const from = formatDate(fromDate);
-    const to = formatDate(toDate);
+    return {
+      from: formatDate(fromDate),
+      to: formatDate(toDate),
+    };
+  };
 
-    const res = await client.get<SportMonksResponse<SportMonksFixture[]>>(
+  const mapFixtures = (fixtures: SportMonksFixture[] = []) =>
+    fixtures.flatMap((f) =>
+      mapFixtureToListItem(f, normalizeFixtureStatus(f.state_id))
+    );
+
+  const getFixtureList = async (path: string, params: Record<string, any>) =>
+    client.get<SportMonksResponse<SportMonksFixture[]>>(path, params);
+
+  const getSingleFixture = async (matchId: number, include: string) =>
+    client.get<SportMonksResponse<SportMonksFixture>>(
+      `/football/fixtures/${matchId}`,
+      { include }
+    );
+
+  const getMatches = async ({ tab, page, limit, q }: MatchListFilters) => {
+    const range = DATE_RANGES[tab];
+    const { from, to } = getDateRange(range.from, range.to);
+
+    const res = await getFixtureList(
       `/football/fixtures/between/${from}/${to}`,
       {
         include: "participants;league;season;scores;state",
@@ -48,11 +70,7 @@ export const MatchesSportMonksRepository = (): MatchesRepository => {
       }
     );
 
-    const fixtures = res.data ?? [];
-
-    const mapped = fixtures.flatMap((f) =>
-      mapFixtureToListItem(f, normalizeFixtureStatus(f.state_id))
-    );
+    const mapped = mapFixtures(res.data);
 
     const searched = q
       ? mapped.filter((m) => {
@@ -65,17 +83,17 @@ export const MatchesSportMonksRepository = (): MatchesRepository => {
         })
       : mapped;
 
+    const count = res.pagination?.count ?? searched.length;
+    const perPage = res.pagination?.per_page ?? limit;
+
     return {
       tab,
       data: searched,
       pagination: {
         page: res.pagination?.current_page ?? page,
-        limit: res.pagination?.per_page ?? limit,
-        count: res.pagination?.count ?? searched.length,
-        total_pages: Math.ceil(
-          (res.pagination?.count ?? searched.length) /
-            (res.pagination?.per_page ?? limit)
-        ),
+        limit: perPage,
+        count,
+        total_pages: Math.ceil(count / perPage),
       },
     };
   };
@@ -83,14 +101,12 @@ export const MatchesSportMonksRepository = (): MatchesRepository => {
   const getMatchById = async (
     matchId: number
   ): Promise<MatchListItem | null> => {
-    const res = await client.get<SportMonksResponse<SportMonksFixture>>(
-      `/football/fixtures/${matchId}`,
-      {
-        include: "participants;league;season;scores;state;venue;venue.country",
-      }
+    const res = await getSingleFixture(
+      matchId,
+      "participants;league;season;scores;state;venue;venue.country"
     );
 
-    if (!res?.data) return null;
+    if (!res.data) return null;
 
     return (
       mapFixtureToListItem(
@@ -104,51 +120,28 @@ export const MatchesSportMonksRepository = (): MatchesRepository => {
   const getMatchEvents = async (
     matchId: number
   ): Promise<MatchEventsResponse | null> => {
-    const res = await client.get<SportMonksResponse<SportMonksFixture>>(
-      `/football/fixtures/${matchId}`,
-      { include: "events;participants" }
-    );
-
-    if (!res?.data) return null;
-
-    return mapMatchEvents(matchId, res.data);
+    const res = await getSingleFixture(matchId, "events;participants");
+    return res.data ? mapMatchEvents(matchId, res.data) : null;
   };
 
   const getMatchStats = async (
     matchId: number
   ): Promise<MatchStatsResponse | null> => {
-    const res = await client.get<SportMonksResponse<SportMonksFixture>>(
-      `/football/fixtures/${matchId}`,
-      { include: "statistics;participants" }
-    );
-
-    if (!res?.data) return null;
-
-    return mapMatchStats(matchId, res.data);
+    const res = await getSingleFixture(matchId, "statistics;participants");
+    return res.data ? mapMatchStats(matchId, res.data) : null;
   };
 
   const getMatchLineups = async (
     matchId: number
   ): Promise<MatchLineupsResponse | null> => {
-    const res = await client.get<SportMonksResponse<SportMonksFixture>>(
-      `/football/fixtures/${matchId}`,
-      { include: "lineups;participants" }
-    );
-
-    if (!res?.data) return null;
-
-    return mapMatchLineups(matchId, res.data);
+    const res = await getSingleFixture(matchId, "lineups;participants");
+    return res.data ? mapMatchLineups(matchId, res.data) : null;
   };
 
   const getPredictableMatches = async (page: number, limit: number) => {
-    const now = new Date();
-    const from = formatDate(now);
+    const { from, to } = getDateRange(0, 21);
 
-    const toDate = new Date(now);
-    toDate.setDate(now.getDate() + 21);
-    const to = formatDate(toDate);
-
-    const res = await client.get<SportMonksResponse<SportMonksFixture[]>>(
+    const res = await getFixtureList(
       `/football/fixtures/between/${from}/${to}`,
       {
         include: "participants;league;season;scores;state",
@@ -157,9 +150,7 @@ export const MatchesSportMonksRepository = (): MatchesRepository => {
       }
     );
 
-    const mapped = (res.data ?? []).flatMap((f) =>
-      mapFixtureToListItem(f, normalizeFixtureStatus(f.state_id))
-    );
+    const mapped = mapFixtures(res.data);
 
     return {
       data: mapped,
@@ -172,6 +163,47 @@ export const MatchesSportMonksRepository = (): MatchesRepository => {
     };
   };
 
+  const getHeadToHeadMatches = async ({
+    team1,
+    team2,
+  }: {
+    team1: number;
+    team2: number;
+  }) => {
+    const res = await getFixtureList(
+      `/football/fixtures/head-to-head/${team1}/${team2}`,
+      {
+        include: "participants;league;season;scores;state",
+      }
+    );
+
+    return {
+      matches: mapFixtures(res.data),
+    };
+  };
+
+  const getMatchComments = async (
+    matchId: number
+  ): Promise<SportMonksFixtureComment[] | null> => {
+    const res = await getSingleFixture(matchId, "comments");
+
+    if (!res.data?.comments) return null;
+
+    return [...res.data.comments].sort((a, b) => a.order - b.order);
+  };
+
+  const getTeamStats = async (matchId: number, seasonId: number) => {
+    const res = await client.get<SportMonksResponse<SportMonksFixture>>(
+      `/football/fixtures/${matchId}`,
+      {
+        include: "participants.statistics.details",
+        filters: `seasonstatisticSeasons=${seasonId}`,
+      }
+    );
+
+    return mapTeamSeasonStats(res.data?.participants ?? [], seasonId);
+  };
+
   return {
     getMatches,
     getMatchById,
@@ -179,5 +211,8 @@ export const MatchesSportMonksRepository = (): MatchesRepository => {
     getMatchLineups,
     getMatchEvents,
     getPredictableMatches,
+    getHeadToHeadMatches,
+    getMatchComments,
+    getTeamStats,
   };
 };

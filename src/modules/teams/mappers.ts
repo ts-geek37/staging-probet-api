@@ -172,8 +172,7 @@ export const mapTeamSeasonStats = (
     const stats: Record<string, number | null> = {};
 
     for (const detail of seasonStat.details ?? []) {
-      const extractor = TEAM_STAT_EXTRACTORS[detail.type_id];
-      console.log("ex", extractor, detail.type_id);
+      const extractor = TEAM_STAT_EXTRACTORS[detail.type_id]; 
       if (!extractor) continue;
 
       const value = extractor.extract(detail.value);

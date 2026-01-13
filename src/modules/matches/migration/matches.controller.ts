@@ -76,4 +76,35 @@ export class MatchesController {
 
     return success(data);
   };
+
+  getMatchComments = async (req: Request) => {
+    const matchId = Number(req.params.id);
+    if (!matchId) throw badRequest("Invalid match id");
+
+    const data = await this.service.getMatchComments(matchId);
+    if (!data) throw notFound("Match comments not found");
+
+    return success(data);
+  };
+
+  getHeadToHeadMatches = async (req: Request) => {
+    const team1 = Number(req.query.team1);
+    const team2 = Number(req.query.team2);
+
+    if (!team1 || !team2) throw badRequest("Invalid team ids");
+
+    const data = await this.service.getHeadToHeadMatches({ team1, team2 });
+    if (!data) throw notFound("Head to head not found");
+
+    return success(data);
+  };
+  getMatchesTeamStats = async (req: Request) => {
+    const matchId = Number(req.params.id);
+    if (!matchId) throw badRequest("Invalid match id");
+    const seasonId = Number(req.params.seasonId);
+    const data = await this.service.getMatchesTeamStats(matchId, seasonId);
+    if (!data) throw notFound("Match team stats not found");
+
+    return success(data);
+  };
 }
