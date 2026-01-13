@@ -1,3 +1,6 @@
+import { MatchStatus } from "@/integrations/sportmonks";
+import { PaginationMeta } from "@/types";
+
 export enum MatchListStatus {
   LIVE = "live",
   UPCOMING = "upcoming",
@@ -12,8 +15,6 @@ export enum MatchDetailView {
   EVENTS = "events",
   PREDICTIONS = "predictions",
 }
-
-export type MatchStatus = "scheduled" | "live" | "finished";
 
 export interface TeamSide {
   id: number;
@@ -37,12 +38,7 @@ export interface MatchCard {
 
 export interface MatchesListResponse {
   data: MatchCard[];
-  pagination: {
-    page: number;
-    limit: number;
-    total: number;
-    has_next: boolean;
-  };
+  pagination: PaginationMeta;
 }
 
 export interface MatchBase {

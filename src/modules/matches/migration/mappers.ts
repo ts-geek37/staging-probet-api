@@ -1,6 +1,7 @@
 import {
   LINEUP_TYPE_MAP,
   MATCH_TEAM_STAT_EXTRACTORS,
+  MatchStatus,
   normalizeEventType,
   SportMonksFixture,
   SportMonksFixtureStatistic,
@@ -10,8 +11,7 @@ import {
   MatchEventsResponse,
   MatchLineupsResponse,
   MatchListItem,
-  MatchStatsResponse,
-  MatchStatus,
+  MatchStatsResponse, 
 } from "./matches.types";
 
 export const mapFixtureToListItem = (

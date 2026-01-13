@@ -23,12 +23,6 @@ export interface SportMonksVenue {
   country?: SportMonksCountry;
 }
 
-export interface SportMonksCoach {
-  id: number;
-  name: string;
-  image_path: string | null;
-}
-
 export interface SportMonksParticipant {
   id: number;
   sport_id: number;
@@ -51,6 +45,7 @@ export interface SportMonksLeague {
   id: number;
   sport_id: number;
   country_id: number | null;
+  country: SportMonksCountry | null;
   name: string;
   active: boolean;
   short_code: string | null;
@@ -63,6 +58,25 @@ export interface SportMonksLeague {
   has_standings?: boolean;
   has_rounds?: boolean;
   seasons?: SportMonksSeason[];
+  currentseason?: SportMonksSeason;
+}
+
+export interface SportMonksStage {
+  id: number;
+  sport_id: number;
+  league_id: number;
+  season_id: number;
+  type_id: number;
+
+  name: string;
+  sort_order: number;
+
+  finished: boolean;
+  pending: boolean;
+  is_current: boolean;
+
+  starting_at: string;
+  ending_at: string;
 }
 
 export interface SportMonksSeason {
@@ -76,6 +90,9 @@ export interface SportMonksSeason {
   starting_at: string | null;
   ending_at: string | null;
   fixtures?: SportMonksFixture[];
+  stages?: SportMonksStage[];
+  currentstage?: SportMonksStage;
+  league?: SportMonksLeague;
 }
 
 export interface SportMonksFixtureScore {
@@ -177,6 +194,14 @@ export interface SportMonksFixture {
   statistics?: SportMonksFixtureStatistic[];
   events?: SportMonksEvent[];
   lineups?: SportMonksLineup[];
+  comments?: SportsmonkFixtureComment[];
+}
+
+export interface SportMonksStandingDetail {
+  id: number;
+  standing_id: number;
+  type_id: number;
+  value: number;
 }
 
 export interface SportMonksStanding {
@@ -191,7 +216,9 @@ export interface SportMonksStanding {
   position: number;
   result: string | null;
   points: number;
+
   participant: SportMonksParticipant;
+  details?: SportMonksStandingDetail[];
   form?: SportMonksStandingForm[] | null;
 }
 
@@ -210,6 +237,61 @@ export interface SportMonksTeamStatistics {
   type_id: number;
   relation_id: number | null;
   value: Record<string, any>;
+  type: string;
+}
+
+export interface SportMonksCoach {
+  id: number;
+  team_id: number;
+  coach_id: number;
+  position_id: number;
+  active: boolean;
+  start: string;
+  end: string | null;
+  temporary: boolean;
+  coach: CoachProfile;
+}
+
+export interface CoachProfile {
+  id: number;
+  player_id: number;
+  sport_id: number;
+  country_id: number;
+  nationality_id: number;
+  city_id: number | null;
+  common_name: string;
+  firstname: string;
+  lastname: string;
+  name: string;
+  display_name: string;
+  image_path: string;
+  height: number | null;
+  weight: number | null;
+  date_of_birth: string;
+  gender: "male" | "female";
+}
+
+export interface SocialChannel {
+  id: number;
+  name: string;
+  base_url: string;
+  hex_color: string;
+}
+
+export interface SportMonksSocial {
+  id: number;
+  social_id: number;
+  social_channel_id: number;
+  value: string;
+  channel?: SocialChannel;
+}
+
+export interface SportMonksRanking {
+  id: number;
+  position: number;
+  participant_id: number;
+  points: number;
+  sport_id: number;
   type: string;
 }
 
@@ -234,6 +316,9 @@ export interface SportMonksTeam {
   coaches?: SportMonksCoach[];
   statistics?: SportMonksTeamStatistics[];
   activeseasons?: SportMonksSeason[];
+  rivals?: SportMonksTeam[];
+  socials?: SportMonksSocial[];
+  rankings?: SportMonksRanking[];
 }
 
 export interface SportMonksPlayer {
@@ -251,13 +336,36 @@ export interface SportMonksPlayer {
     image_path: string | null;
   };
 
+  country?: {
+    id: number;
+    name: string;
+  };
+  trophies?: SportMonksPlayerTrophy[];
+  city?: {
+    id: number;
+    name: string;
+  };
+
   position?: {
     id: number;
     name: string;
   };
 
-  teams?: {
+  detailedPosition?: {
     id: number;
+    name: string;
+  };
+
+  metadata?: {
+    shirt_number?: number | null;
+    market_value?: number | null;
+    contract_until?: string | null;
+    is_active?: boolean;
+    is_captain?: boolean;
+  };
+
+  teams?: {
+    id: number; // pivot id
     team: {
       id: number;
       name: string;
@@ -275,16 +383,9 @@ export interface SportMonksPlayerSeasonStatistic {
   position_id: number | null;
   jersey_number: number | null;
 
-  season?: {
-    id: number;
-    name: string;
-  };
+  season?: SportMonksSeason;
 
-  team?: {
-    id: number;
-    name: string;
-    image_path: string | null;
-  };
+  team?: SportMonksTeam;
 
   position?: {
     id: number;
@@ -331,4 +432,118 @@ export interface SportMonksSquadMember {
 
   start?: string;
   end?: string;
+}
+
+export interface SportMonksTopScorer {
+  id: number;
+  season_id: number;
+  player_id: number;
+  participant_id: number;
+  type_id: number;
+  position: number;
+  total: number;
+
+  player?: {
+    id: number;
+    display_name: string;
+    name: string;
+    image_path: string | null;
+    position_id: number | null;
+  };
+
+  participant?: {
+    id: number;
+    name: string;
+    image_path: string | null;
+  };
+
+  type?: {
+    id: number;
+    name: string;
+    code: string;
+    developer_name: string;
+    stat_group: string | null;
+  };
+}
+
+export interface SportMonksTeamTransfer {
+  id: number;
+  sport_id: number;
+  player_id: number;
+  type_id: number;
+  from_team_id: number;
+  to_team_id: number;
+  position_id: number;
+  detailed_position_id: number | null;
+  date: string;
+  career_ended: boolean;
+  completed: boolean;
+  amount: number | null;
+  type: SportMonksTransferType;
+  toteam: SportMonksTeam;
+  fromteam: SportMonksTeam;
+  player: SportMonksPlayer;
+}
+
+export interface SportMonksTransferType {
+  id: number;
+  name: string;
+  code: string;
+  developer_name: string;
+  model_type: string;
+  stat_group: string | null;
+}
+
+export interface SportMonksTeamSeasonStatistic {
+  id: number;
+  team_id: number;
+  season_id: number;
+  has_values: boolean;
+
+  season?: SportMonksSeason;
+
+  team?: {
+    id: number;
+    name: string;
+    image_path: string | null;
+  };
+
+  details: SportMonksTeamSeasonStatisticDetail[];
+}
+
+export interface SportMonksTeamSeasonStatisticDetail {
+  id: number;
+  team_statistic_id: number;
+  type_id: number;
+  value: Record<string, any>;
+}
+
+export interface SportMonksPlayerTrophy {
+  id: number;
+  participant_id: number;
+  team_id: number;
+  league_id: number;
+  season_id: number;
+  trophy_id: number;
+
+  trophy: SportMonksTrophy;
+  team: SportMonksTeam;
+}
+
+export interface SportMonksTrophy {
+  id: number;
+  sport_id: number;
+  position: number;
+  name: string;
+}
+
+export interface SportsmonkFixtureComment {
+  id: number;
+  fixture_id: number;
+  comment: string;
+  minute: number;
+  extra_minute: number | null;
+  is_goal: boolean;
+  is_important: boolean;
+  order: number;
 }

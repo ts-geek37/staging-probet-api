@@ -1,6 +1,6 @@
-import { LeagueCard } from "../leagues/migration/leagues.types";
+import { LeagueCard } from "../leagues/leagues.types";
 import { MatchListItem } from "../matches/migration/matches.types";
-import { TeamCard } from "../teams/migration/teams.types";
+import { TeamCard } from "../teams/teams.types";
 
 export interface HomeResponse {
   featured_match: MatchListItem | null;

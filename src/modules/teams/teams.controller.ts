@@ -1,6 +1,5 @@
+import { badRequest, notFound, success } from "@/utils";
 import { Request } from "express";
-import { badRequest, notFound, success } from "../../utils";
-import { TeamDetailView } from "./teams.types";
 import { TeamsService } from "./teams.service";
 
 export class TeamsController {
@@ -16,29 +15,62 @@ export class TeamsController {
 
     const search =
       typeof req.query.search === "string" ? req.query.search : undefined;
-    const region =
-      typeof req.query.region === "string" ? req.query.region : undefined;
 
-    const data = await this.service.getTeams(page, limit, search, region);
+    const data = await this.service.getTeams(page, limit, search);
     return success(data);
   };
 
-  getTeam = async (req: Request) => {
+  getTeamProfile = async (req: Request) => {
     const teamId = Number(req.params.id);
-    if (!teamId) {
-      throw badRequest("Invalid team id");
+    if (!teamId) throw badRequest("Invalid team id");
+
+    const data = await this.service.getTeamProfile(teamId);
+    if (!data) throw notFound("Team not found");
+
+    return success(data);
+  };
+
+  getTeamPlayers = async (req: Request) => {
+    const teamId = Number(req.params.id);
+    if (!teamId) throw badRequest("Invalid team id");
+
+    const data = await this.service.getTeamPlayers(teamId);
+    if (!data) throw notFound("Team not found");
+
+    return success(data);
+  };
+  getTeamMatches = async (req: Request) => {
+    const teamId = Number(req.params.id);
+    if (!teamId) throw badRequest("Invalid team id");
+
+    const data = await this.service.getTeamMatches(teamId);
+
+    return success(data);
+  };
+
+  getTeamStats = async (req: Request) => {
+    const teamId = Number(req.params.id);
+    if (!teamId) throw badRequest("Invalid team id");
+
+    const data = await this.service.getTeamStats(teamId);
+    if (!data) throw notFound("Team not found");
+
+    return success(data);
+  };
+
+  getTeamTransfers = async (req: Request) => {
+    const teamId = Number(req.params.id);
+    if (!teamId) throw badRequest("Invalid team id");
+
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 10;
+
+    if (page < 1 || limit < 1) {
+      throw badRequest("Invalid pagination parameters");
     }
 
-    const view = Object.values(TeamDetailView).includes(
-      req.query.view as TeamDetailView
-    )
-      ? (req.query.view as TeamDetailView)
-      : TeamDetailView.OVERVIEW;
-
-    const data = await this.service.getTeam(teamId, view);
-    if (!data) {
-      throw notFound("Team not found");
-    }
+    const data = await this.service.getTeamTransfers(teamId, page, limit);
+    if (!data) throw notFound("Team not found");
 
     return success(data);
   };

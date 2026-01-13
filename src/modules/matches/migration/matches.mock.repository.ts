@@ -1,3 +1,5 @@
+import { MatchStatus } from "@/integrations/sportmonks";
+import { MatchesRepository } from "./matches.repository";
 import {
   MatchesListResponse,
   MatchEventsResponse,
@@ -6,14 +8,13 @@ import {
   MatchListItem,
   MatchStatsResponse,
 } from "./matches.types";
-import { MatchesRepository } from "./matches.repository";
 
 /* ----------------------------------
    BASE MATCH DATA
 ---------------------------------- */
 
 const allMatches: MatchListItem[] = Array.from({ length: 30 }).map((_, i) => {
-  const status = i < 8 ? "LIVE" : i < 18 ? "UPCOMING" : "FT";
+  const status = i < 8 ? "LIVE" : i < 18 ? "UPCOMING" : "FINISHED";
 
   return {
     id: 10000 + i,
@@ -233,7 +234,37 @@ export const mockMatchesRepository: MatchesRepository = {
       pagination: {
         page,
         limit,
-        has_next: end < data.length,
+        count: data.length,
+        total_pages: Math.ceil(data.length / limit),
+      },
+    };
+  },
+
+  getPredictableMatches: async (
+    page: number,
+    limit: number
+  ): Promise<MatchesListResponse> => {
+    const now = new Date();
+
+    const data = allMatches.map((m, i) => ({
+      ...m,
+      kickoff_time: new Date(
+        now.getTime() + (i % 21) * 24 * 60 * 60 * 1000
+      ).toISOString(),
+      status: "UPCOMING" as MatchStatus,
+    }));
+
+    const start = (page - 1) * limit;
+    const end = start + limit;
+
+    return {
+      tab: "UPCOMING",
+      data: data.slice(start, end),
+      pagination: {
+        page,
+        limit,
+        count: data.length,
+        total_pages: Math.ceil(data.length / limit),
       },
     };
   },

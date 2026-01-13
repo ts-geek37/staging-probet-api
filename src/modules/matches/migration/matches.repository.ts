@@ -5,6 +5,7 @@ import {
   MatchListFilters,
   MatchListItem,
   MatchStatsResponse,
+  PredictableMatchesResponse,
 } from "./matches.types";
 
 export interface MatchesRepository {
@@ -22,4 +23,9 @@ export interface MatchesRepository {
   getMatchLineups: (matchId: number) => Promise<MatchLineupsResponse | null>;
 
   getMatchEvents: (matchId: number) => Promise<MatchEventsResponse | null>;
+
+  getPredictableMatches: (
+    page: number,
+    limit: number
+  ) => Promise<PredictableMatchesResponse>;
 }

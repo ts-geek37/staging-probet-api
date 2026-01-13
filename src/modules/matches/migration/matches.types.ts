@@ -1,3 +1,6 @@
+import { MatchStatus } from "@/integrations/sportmonks";
+import { PaginationMeta } from "@/types";
+
 export enum MatchListStatus {
   LIVE = "live",
   UPCOMING = "upcoming",
@@ -10,8 +13,6 @@ export interface MatchListFilters {
   limit: number;
   q?: string;
 }
-
-export type MatchStatus = "UPCOMING" | "LIVE" | "FT";
 
 export interface MatchTeam {
   id: number;
@@ -61,11 +62,7 @@ export interface MatchesListResponse {
 
   data: MatchListItem[];
 
-  pagination: {
-    page: number;
-    limit: number;
-    has_next: boolean;
-  };
+  pagination: PaginationMeta;
 }
 export type MatchEventType =
   | "GOAL"
@@ -141,4 +138,9 @@ export interface MatchStatsTeam {
     logo: string | null;
   };
   statistics: Record<string, number | null>;
+}
+
+export interface PredictableMatchesResponse {
+  data: MatchListItem[];
+  pagination: PaginationMeta;
 }

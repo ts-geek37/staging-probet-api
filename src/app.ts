@@ -8,8 +8,8 @@ import webhookRoutes from "./webhookRoutes";
 const app = express();
 
 app.use(installCORS);
-app.use(requestLogger);
 
+app.use(requestLogger); 
 app.use("/webhooks", webhookRoutes);
 app.use(express.json());
 

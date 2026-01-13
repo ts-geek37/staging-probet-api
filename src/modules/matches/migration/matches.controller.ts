@@ -5,7 +5,7 @@ import { MatchesService } from "./matches.service";
 enum VALID_TABS {
   live = "LIVE",
   upcoming = "UPCOMING",
-  finished = "FT",
+  finished = "FINISHED",
 }
 
 export class MatchesController {

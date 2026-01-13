@@ -1,26 +1,21 @@
-import {
-  PlayerDetailResponse,
-  PlayerDetailView,
-  PlayerListResponse,
-} from "./players.types";
-import { PlayersRepository } from "./repositories/players.repository";
+import { PlayersRepository } from "./players.repository";
 
 export class PlayersService {
   constructor(private readonly repo: PlayersRepository) {}
 
-  getPlayers(
-    page: number,
-    limit: number,
-    search?: string,
-    teamId?: number
-  ): Promise<PlayerListResponse> {
-    return this.repo.getPlayers(page, limit, search, teamId);
-  }
+  getPlayerProfile = (playerId: number) => {
+    return this.repo.getPlayerProfile(playerId);
+  };
 
-  getPlayer(
-    playerId: number,
-    view: PlayerDetailView
-  ): Promise<PlayerDetailResponse | null> {
-    return this.repo.getPlayerById(playerId, view);
-  }
+  getPlayerStats = (playerId: number) => {
+    return this.repo.getPlayerStats(playerId);
+  };
+
+  getPlayerMatches = (playerId: number, page: number, limit: number) => {
+    return this.repo.getPlayerMatches(playerId, page, limit);
+  };
+
+  getPlayerTransfers = (playerId: number, page?: number, perPage?: number) => {
+    return this.repo.getPlayerTransfers(playerId, page, perPage);
+  };
 }
