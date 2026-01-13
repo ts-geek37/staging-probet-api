@@ -1,14 +1,18 @@
 import {
+  MatchStatus,
   PLAYER_STAT_EXTRACTORS,
   SportMonksFixture,
   SportMonksPlayer,
   SportMonksPlayerSeasonStatistic,
+  SportMonksTeam,
+  SportMonksTeamTransfer,
   formatDate as i,
 } from "@/integrations/sportmonks";
-import { MatchStatus } from "@/modules/matches/migration/matches.types";
 import {
   PlayerProfileResponse,
   PlayerSeasonStatsResponse,
+  PlayerTransfer,
+  TransferTeam,
 } from "./players.types";
 
 export const formatDate = i;
@@ -19,27 +23,45 @@ export const mapPlayerProfile = (
   const dob = p.date_of_birth ? new Date(p.date_of_birth) : null;
 
   const age = dob
-    ? new Date().getFullYear() -
-      dob.getFullYear() -
-      (new Date() < new Date(dob.setFullYear(new Date().getFullYear())) ? 1 : 0)
+    ? (() => {
+        const today = new Date();
+        let a = today.getFullYear() - dob.getFullYear();
+        const m = today.getMonth() - dob.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) a--;
+        return a;
+      })()
     : null;
 
   const teams =
-    p.teams?.map((team) => ({
-      id: team.id,
-      name: team.team.name,
-      logo: team.team.image_path,
+    p.teams?.map((t) => ({
+      id: t.team.id,
+      name: t.team.name,
+      logo: t.team.image_path,
     })) ?? [];
 
+  const currentTeam = teams[0] ?? null;
+  
+    const trophies = p.trophies?.map((t) => ({
+      id: t.id,
+      name: t.trophy?.name,
+      position: t.trophy?.position,
+      team:{
+        id: t.team.id,
+        name: t.team.name,
+        logo : t.team.image_path
+      }
+    }))
   return {
     id: p.id,
     name: p.name,
     photo: p.image_path,
+
     date_of_birth: p.date_of_birth,
     age,
     height: p.height,
     weight: p.weight,
     preferred_foot: p.preferred_foot,
+
     nationality: p.nationality
       ? {
           id: p.nationality.id,
@@ -47,10 +69,32 @@ export const mapPlayerProfile = (
           flag: p.nationality.image_path,
         }
       : null,
+
+    birthplace: {
+      country: p.country?.name ?? null,
+      city: p.city?.name ?? null,
+    },
+
     position: {
       id: p.position?.id ?? null,
       name: p.position?.name ?? null,
+      detailed: p.detailedPosition?.name ?? null,
     },
+
+    shirt_number: p.metadata?.shirt_number ?? null,
+
+    is_active: p.metadata?.is_active ?? true,
+
+    market_value: p.metadata?.market_value ?? null,
+
+    contract: {
+      until: p.metadata?.contract_until ?? null,
+    },
+
+    is_captain: p.metadata?.is_captain ?? false,
+
+    current_team: currentTeam,
+    trophies,
     teams,
   };
 };
@@ -75,6 +119,13 @@ export const mapPlayerSeasonStats = (
         season: {
           id: row.season_id,
           name: row.season?.name ?? "Unknown",
+          starting_at: row.season?.starting_at ?? null,
+          ending_at: row.season?.ending_at ?? null,
+          league: {
+            id: row.season?.league?.id ?? 0,
+            name: row.season?.league?.name ?? "Unknown",
+            logo: row.season?.league?.image_path ?? null,
+          },
         },
         team: row.team
           ? {
@@ -134,5 +185,33 @@ export const mapPlayerMatch = (f: SportMonksFixture, status: MatchStatus) => {
               )?.score.goals ?? null,
           }
         : undefined,
+  };
+};
+
+const mapTeam = (team: SportMonksTeam | null): TransferTeam | null => {
+  if (!team) return null;
+
+  return {
+    id: team.id,
+    name: team.name,
+    shortCode: team.short_code,
+    image: team.image_path,
+  };
+};
+
+export const mapSportMonksTransferToPlayerTransfer = (
+  transfer: SportMonksTeamTransfer
+): PlayerTransfer => {
+  return {
+    id: transfer.id,
+    date: transfer.date,
+    type: {
+      code: transfer.type.code,
+      label: transfer.type.name,
+    },
+    fromTeam: mapTeam(transfer.fromteam),
+    toTeam: mapTeam(transfer.toteam),
+    completed: transfer.completed,
+    amount: transfer.amount,
   };
 };

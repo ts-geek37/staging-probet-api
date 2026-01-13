@@ -1,3 +1,4 @@
+import { MatchStatus } from "@/integrations/sportmonks";
 import { PaginationMeta } from "@/types";
 
 export enum MatchListStatus {
@@ -14,8 +15,6 @@ export enum MatchDetailView {
   EVENTS = "events",
   PREDICTIONS = "predictions",
 }
-
-export type MatchStatus = "scheduled" | "live" | "finished";
 
 export interface TeamSide {
   id: number;

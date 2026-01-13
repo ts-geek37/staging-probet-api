@@ -4,6 +4,7 @@ import {
   LeaguesListResponse,
   LeagueStandingsResponse,
   LeagueStatisticsResponse,
+  TopScorersResponse,
 } from "./leagues.types";
 
 export interface LeaguesRepository {
@@ -27,4 +28,6 @@ export interface LeaguesRepository {
     leagueId: number,
     status: string | undefined
   ) => Promise<LeagueMatchesResponse>;
+
+  getTopScorers: (leagueId: number) => Promise<TopScorersResponse>;
 }

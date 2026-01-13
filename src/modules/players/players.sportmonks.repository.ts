@@ -5,7 +5,10 @@ import {
   SportMonksPlayer,
   SportMonksPlayerSeasonStatistic,
   SportMonksResponse,
+  SportMonksTeamTransfer,
 } from "@/integrations/sportmonks";
+import { mapTeamTransferRows } from "@/modules/teams/mappers";
+import { TeamTransferResponse } from "@/modules/teams/teams.types";
 import {
   formatDate,
   mapPlayerMatch,
@@ -27,7 +30,10 @@ export const PlayersSportMonksRepository = (): PlayersRepository => {
   ): Promise<PlayerProfileResponse | null> => {
     const res = await client.get<SportMonksResponse<SportMonksPlayer>>(
       `/football/players/${playerId}`,
-      { include: "nationality;position;teams;teams.team" }
+      {
+        include:
+          "country;city;position;detailedPosition;teams.team;trophies.team;trophies.trophy;nationality",
+      }
     );
 
     if (!res.data) return null;
@@ -60,7 +66,7 @@ export const PlayersSportMonksRepository = (): PlayersRepository => {
     from.setDate(now.getDate() - 15);
 
     const to = new Date(now);
-    to.setDate(now.getDate() + 30);
+    to.setDate(now.getDate() + 15);
 
     const res = await client.get<SportMonksResponse<SportMonksFixture[]>>(
       `/football/fixtures/between/${formatDate(from)}/${formatDate(to)}`,
@@ -93,9 +99,37 @@ export const PlayersSportMonksRepository = (): PlayersRepository => {
     };
   };
 
+  const getPlayerTransfers = async (
+    playerId: number,
+    page: number = 1,
+    perPage: number = 10
+  ): Promise<TeamTransferResponse> => {
+    const client = new SportMonksClient();
+
+    const res = await client.get<SportMonksResponse<SportMonksTeamTransfer[]>>(
+      `/football/transfers/players/${playerId}`,
+      {
+        include: "type;fromTeam;toTeam;player",
+        page,
+        per_page: perPage,
+      }
+    );
+    return {
+      transfers: mapTeamTransferRows(res.data ?? []),
+      pagination: {
+        page: res.pagination?.current_page ?? page,
+        limit: res.pagination?.per_page,
+        count: res.pagination?.count,
+        total_pages: Math.ceil(
+          res.pagination?.count / res.pagination?.per_page
+        ),
+      },
+    };
+  };
   return {
     getPlayerProfile,
     getPlayerStats,
     getPlayerMatches,
+    getPlayerTransfers,
   };
 };

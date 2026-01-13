@@ -1,3 +1,4 @@
+import { TeamTransferResponse } from "@/modules/teams/teams.types";
 import {
   PlayerMatchesResponse,
   PlayerProfileResponse,
@@ -16,4 +17,10 @@ export interface PlayersRepository {
     page: number,
     limit: number
   ) => Promise<PlayerMatchesResponse | null>;
+
+  getPlayerTransfers: (
+    playerId: number,
+    page?: number,
+    perPage?: number
+  ) => Promise<TeamTransferResponse | null>;
 }

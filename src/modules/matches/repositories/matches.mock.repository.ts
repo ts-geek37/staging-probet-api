@@ -20,7 +20,7 @@ export class MatchesMockRepository implements MatchesRepository {
       {
         id: 1,
         league: { id: 9, name: "Premier League" },
-        status: "live",
+        status: "LIVE",
         kickoff_time: "2025-12-19T18:00:00Z",
         minute: 72,
         home_team: {
@@ -39,7 +39,7 @@ export class MatchesMockRepository implements MatchesRepository {
       {
         id: 2,
         league: { id: 9, name: "Premier League" },
-        status: "scheduled",
+        status: "UPCOMING",
         kickoff_time: "2025-12-20T18:00:00Z",
         home_team: {
           id: 3,
@@ -55,8 +55,8 @@ export class MatchesMockRepository implements MatchesRepository {
     ];
 
     const filtered = all.filter((m) => {
-      if (status === MatchListStatus.LIVE) return m.status === "live";
-      if (status === MatchListStatus.FINISHED) return m.status === "finished";
+      if (status === MatchListStatus.LIVE) return m.status === "LIVE";
+      if (status === MatchListStatus.FINISHED) return m.status === "FINISHED";
       return true;
     });
 
@@ -93,7 +93,7 @@ export class MatchesMockRepository implements MatchesRepository {
     const base: MatchBase = {
       id: matchId,
       league: { id: 9, name: "Premier League", season: "2025/26" },
-      status: "live",
+      status: "LIVE",
       kickoff_time: new Date().toISOString(),
       minute: 61,
       venue: "Emirates Stadium",

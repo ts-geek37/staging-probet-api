@@ -1,47 +1,55 @@
+import { badRequest, notFound, success } from "@/utils";
 import { Request } from "express";
-import { badRequest, notFound, success } from "../../utils";
-import { PlayerDetailView } from "./players.types";
 import { PlayersService } from "./players.service";
 
 export class PlayersController {
   constructor(private readonly service: PlayersService) {}
 
-  getPlayers = async (req: Request) => {
+  getPlayerProfile = async (req: Request) => {
+    const playerId = Number(req.params.id);
+    if (!playerId) throw badRequest("Invalid player id");
+
+    const data = await this.service.getPlayerProfile(playerId);
+    if (!data) throw notFound("Player not found");
+
+    return success(data);
+  };
+
+  getPlayerStats = async (req: Request) => {
+    const playerId = Number(req.params.id);
+    if (!playerId) throw badRequest("Invalid player id");
+
+    const data = await this.service.getPlayerStats(playerId);
+    if (!data) throw notFound("Player not found");
+
+    return success(data);
+  };
+
+  getPlayerMatches = async (req: Request) => {
+    const playerId = Number(req.params.id);
+    if (!playerId) throw badRequest("Invalid player id");
+
     const page = Number(req.query.page) || 1;
-    const limit = Number(req.query.limit) || 20;
+    const limit = Number(req.query.limit) || 25;
 
     if (page < 1 || limit < 1) {
       throw badRequest("Invalid pagination parameters");
     }
 
-    const search =
-      typeof req.query.search === "string" ? req.query.search : undefined;
+    const data = await this.service.getPlayerMatches(playerId, page, limit);
+    if (!data) throw notFound("Player not found");
 
-    const teamId = req.query.teamId
-      ? Number(req.query.teamId)
-      : undefined;
-
-    const data = await this.service.getPlayers(page, limit, search, teamId);
     return success(data);
   };
 
-  getPlayer = async (req: Request) => {
+  getPlayerTransfers = async (req: Request) => {
     const playerId = Number(req.params.id);
-    if (!playerId) {
-      throw badRequest("Invalid player id");
-    }
+    if (!playerId) throw badRequest("Invalid player id");
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 10;
 
-    const view = Object.values(PlayerDetailView).includes(
-      req.query.view as PlayerDetailView
-    )
-      ? (req.query.view as PlayerDetailView)
-      : PlayerDetailView.OVERVIEW;
+    const transfers = await this.service.getPlayerTransfers(playerId, page, limit);
 
-    const data = await this.service.getPlayer(playerId, view);
-    if (!data) {
-      throw notFound("Player not found");
-    }
-
-    return success(data);
+    return success(transfers);
   };
 }

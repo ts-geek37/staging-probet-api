@@ -1,7 +1,7 @@
 import { db } from "@/db";
 import { stripeEvents } from "@/db/schema/stripe_events";
 import { subscriptions } from "@/db/schema/subscription";
-import { eq, and, gt } from "drizzle-orm";
+import { and, eq, gt } from "drizzle-orm";
 
 export class BillingRepository {
   static async getUserSubscription(userId: string) {

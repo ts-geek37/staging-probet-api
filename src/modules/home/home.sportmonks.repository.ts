@@ -3,9 +3,9 @@ import {
   SportMonksFixture,
   SportMonksResponse,
 } from "@/integrations/sportmonks";
-import { getLeaguesFromDb } from "@/modules/leagues/migration/leagues.db.repository";
+import { getLeaguesFromDb } from "@/modules/leagues/leagues.db.repository";
 import { MatchListItem } from "@/modules/matches/migration/matches.types";
-import { getTeamsFromDb } from "@/modules/teams/migration/teams.db.repository";
+import { getTeamsFromDb } from "@/modules/teams/teams.db.repository";
 import { HomeRepository } from "./home.repository";
 import { HomeResponse } from "./home.types";
 import { mapFixtureToHomeMatch } from "./mapper";
@@ -51,7 +51,7 @@ export const HomeSportMonksRepository = (): HomeRepository => {
         live.push(match);
       } else if (match.status === "UPCOMING" && upcoming.length < 3) {
         upcoming.push(match);
-      } else if (match.status === "FT" && finished.length < 3) {
+      } else if (match.status === "FINISHED" && finished.length < 3) {
         finished.push(match);
       }
     }

@@ -1,31 +1,31 @@
 import {
   SportMonksClient,
   SportMonksFixture,
-  SportMonksLeague,
   SportMonksResponse,
   SportMonksStanding,
+  SportMonksTopScorer,
   formatDate,
-  normalizeCompetitionType,
 } from "@/integrations/sportmonks";
 import { getLeagueProfileFromDb } from "./leagues.db.repository";
 import { LeaguesRepository } from "./leagues.repository";
-import { resolveCurrentSeason } from "./leagues.season.cache";
+import { resolveLeagueContext } from "./leagues.season.cache";
 import {
   LeagueMatchesResponse,
   LeagueProfileResponse,
   LeagueStandingsResponse,
   LeagueStatisticsResponse,
+  TopScorersResponse,
 } from "./leagues.types";
 import {
   mapLeagueFixtureMatch,
   mapSeasonStatistics,
   mapStandingsTable,
+  mapTopScorers,
 } from "./mapper";
 
-export const LeaguesSportMonksRepository = (baseRepo: {
-  getLeagues: LeaguesRepository["getLeagues"];
-  getLeagueProfile: LeaguesRepository["getLeagueProfile"];
-}): LeaguesRepository => {
+export const LeaguesSportMonksRepository = (
+  baseRepo: Pick<LeaguesRepository, "getLeagues" | "getLeagueProfile">
+): LeaguesRepository => {
   const getLeagues = baseRepo.getLeagues;
 
   const getLeagueProfile = async (
@@ -35,47 +35,38 @@ export const LeaguesSportMonksRepository = (baseRepo: {
     if (!base) return null;
 
     const client = new SportMonksClient();
-    const season = await resolveCurrentSeason(leagueId, client);
-
-    const leagueRes = await client.get<SportMonksResponse<SportMonksLeague>>(
-      `/football/leagues/${leagueId}`
-    );
+    const context = await resolveLeagueContext(leagueId, client);
+    if (!context) return null;
 
     return {
       id: base.id,
       name: base.name,
       logo: base.logo,
-      competition_type: normalizeCompetitionType(leagueRes.data.type),
+      competition_type: context.league.competition_type,
       country: base.country,
-      current_season: season,
+      current_season: context.season,
     };
   };
 
   const getLeagueStandings = async (
     leagueId: number
   ): Promise<LeagueStandingsResponse | null> => {
-    const header = await getLeagueProfileFromDb(leagueId);
-    if (!header) return null;
-
     const client = new SportMonksClient();
-    const season = await resolveCurrentSeason(leagueId, client);
-    if (!season) return null;
+    const context = await resolveLeagueContext(leagueId, client);
+    if (!context?.season) return null;
 
     const res = await client.get<SportMonksResponse<SportMonksStanding[]>>(
-      `/football/standings/seasons/${season.id}`,
-      { include: "participant;form" }
+      `/football/standings/seasons/${context.season.id}`,
+      { include: "participant;form;details" }
     );
 
     return {
       league: {
-        id: header.id,
-        name: header.name,
-        country: header.country.name,
+        id: context.league.id,
+        name: context.league.name,
+        country: context.league.country.name,
       },
-      season: {
-        id: season.id,
-        name: season.name,
-      },
+      season: context.season,
       table: mapStandingsTable(res.data),
     };
   };
@@ -83,26 +74,19 @@ export const LeaguesSportMonksRepository = (baseRepo: {
   const getLeagueStatistics = async (
     leagueId: number
   ): Promise<LeagueStatisticsResponse | null> => {
-    const header = await getLeagueProfileFromDb(leagueId);
-    if (!header) return null;
-
     const client = new SportMonksClient();
-
-    const season = await resolveCurrentSeason(leagueId, client);
-    if (!season) return null;
+    const context = await resolveLeagueContext(leagueId, client);
+    if (!context?.season) return null;
 
     const res = await client.get<
       SportMonksResponse<{ statistics?: { type_id: number; value: any }[] }>
-    >(`/football/seasons/${season.id}`, {
+    >(`/football/seasons/${context.season.id}`, {
       include: "statistics",
     });
 
     return {
-      league: {
-        id: header.id,
-        name: header.name,
-      },
-      seasons: [mapSeasonStatistics(season, res.data.statistics ?? [])],
+      league: context.league,
+      seasons: [mapSeasonStatistics(context.season, res.data.statistics ?? [])],
     };
   };
 
@@ -110,23 +94,21 @@ export const LeaguesSportMonksRepository = (baseRepo: {
     leagueId: number,
     status?: "LIVE" | "UPCOMING" | "FT"
   ): Promise<LeagueMatchesResponse | null> => {
-    const header = await getLeagueProfileFromDb(leagueId);
-    if (!header) return null;
-
     const client = new SportMonksClient();
+    const context = await resolveLeagueContext(leagueId, client);
+    if (!context) return null;
 
     const now = new Date();
-
     const from = new Date(now);
-    from.setDate(now.getDate() - 30);
+    from.setDate(now.getDate() - 10);
 
     const to = new Date(now);
-    to.setDate(now.getDate() + 30);
+    to.setDate(now.getDate() + 10);
 
     const res = await client.get<SportMonksResponse<SportMonksFixture[]>>(
       `/football/fixtures/between/${formatDate(from)}/${formatDate(to)}`,
       {
-        include: "participants;league;scores;state",
+        include: "participants;league;scores",
         params: {
           "filter[league_id]": leagueId,
           order: "asc",
@@ -135,20 +117,39 @@ export const LeaguesSportMonksRepository = (baseRepo: {
     );
 
     const matches = (res.data ?? [])
-      .map((f) => mapLeagueFixtureMatch(f))
+      .map(mapLeagueFixtureMatch)
       .filter(Boolean)
-      .filter((m) => {
-        if (!status) return true;
-        return m.status === status;
-      });
+      .filter((m) => (status ? m.status === status : true));
 
     return {
-      league: {
-        id: header.id,
-        name: header.name,
-      },
-      season: null,
+      league: context.league,
+      season: context.season,
       matches,
+    };
+  };
+
+  const getTopScorers = async (
+    leagueId: number
+  ): Promise<TopScorersResponse | null> => {
+    const client = new SportMonksClient();
+    const context = await resolveLeagueContext(leagueId, client);
+    if (!context?.season) return null;
+
+    const res = await client.get<SportMonksResponse<SportMonksTopScorer[]>>(
+      `/football/topscorers/seasons/${context.season.id}`,
+      { include: "player;participant;type" }
+    );
+
+    const mapped = mapTopScorers(res.data);
+
+    return {
+      league: context.league,
+      season: context.season,
+      schema: {
+        tables: mapped.schema,
+        order: mapped.order,
+      },
+      tables: mapped.tables,
     };
   };
 
@@ -158,5 +159,6 @@ export const LeaguesSportMonksRepository = (baseRepo: {
     getLeagueStandings,
     getLeagueStatistics,
     getLeagueMatches,
+    getTopScorers,
   };
 };

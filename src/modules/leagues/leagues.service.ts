@@ -1,22 +1,28 @@
-import {
-  LeagueListResponse,
-  LeagueResponse,
-  LeagueView,
-} from "./leagues.types";
-import { LeaguesRepository } from "./repositories/leagues.repository";
+import { LeaguesRepository } from "./leagues.repository";
 
 export class LeaguesService {
   constructor(private readonly repo: LeaguesRepository) {}
+  getLeagues = (page: number, limit: number, search?: string) => {
+    return this.repo.getLeagues(page, limit, search);
+  };
 
-  async getLeague(leagueId: number, view: LeagueView): Promise<LeagueResponse> {
-    return this.repo.getLeagueById(leagueId, view);
-  }
+  getLeagueProfile = (leagueId: number) => {
+    return this.repo.getLeagueProfile(leagueId);
+  };
 
-  async getLeaguesList(
-    page: number,
-    limit: number,
-    search?: string
-  ): Promise<LeagueListResponse> {
-    return this.repo.getLeaguesList(page, limit, search);
-  }
+  getLeagueStandings = (leagueId: number) => {
+    return this.repo.getLeagueStandings(leagueId);
+  };
+
+  getLeagueStatistics = (leagueId: number) => {
+    return this.repo.getLeagueStatistics(leagueId);
+  };
+
+  getLeagueMatches = (leagueId: number, status?: string) => {
+    return this.repo.getLeagueMatches(leagueId, status);
+  };
+
+  getTopScorers = (leagueId: number) => {
+    return this.repo.getTopScorers(leagueId);
+  };
 }

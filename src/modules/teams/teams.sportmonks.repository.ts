@@ -5,20 +5,23 @@ import {
   SportMonksResponse,
   SportMonksSquadMember,
   SportMonksTeam,
+  SportMonksTeamSeasonStatistic,
+  SportMonksTeamTransfer,
 } from "@/integrations/sportmonks";
 import {
   mapTeamMatches,
   mapTeamOverview,
   mapTeamPlayers,
   mapTeamSeasonStats,
+  mapTeamTransferRows,
 } from "./mappers";
 import { TeamsRepository } from "./teams.repository";
 import {
-  SportMonksTeamSeasonStatistic,
   TeamMatchesResponse,
   TeamOverviewResponse,
   TeamPlayersResponse,
   TeamSeasonStatsResponse,
+  TeamTransferResponse,
 } from "./teams.types";
 
 export const TeamsSportMonksRepository = (baseRepo: {
@@ -46,7 +49,10 @@ export const TeamsSportMonksRepository = (baseRepo: {
   ): Promise<TeamOverviewResponse | null> => {
     const res = await client.get<SportMonksResponse<SportMonksTeam>>(
       `/football/teams/${teamId}`,
-      { include: "country;venue;activeSeasons" }
+      {
+        include:
+          "country;venue;activeSeasons;rivals;socials;rankings;activeSeasons.league",
+      }
     );
 
     if (!res.data) return null;
@@ -60,7 +66,7 @@ export const TeamsSportMonksRepository = (baseRepo: {
     const now = new Date();
 
     const from = new Date(now);
-    from.setDate(now.getDate() - 15);
+    from.setDate(now.getDate() - 30);
 
     const to = new Date(now);
     to.setDate(now.getDate() + 30);
@@ -81,12 +87,41 @@ export const TeamsSportMonksRepository = (baseRepo: {
     const res = await client.get<
       SportMonksResponse<SportMonksTeamSeasonStatistic[]>
     >(`/football/statistics/seasons/teams/${teamId}`, {
-      include: "season;team",
+      include: "season;team;season.league",
       order: "desc",
-      per_page: 5,
+      per_page: 10,
     });
 
     return mapTeamSeasonStats(res.data ?? []);
+  };
+
+  const getTeamTransfers = async (
+    teamId: number,
+    page: number = 1,
+    perPage: number = 10
+  ): Promise<TeamTransferResponse> => {
+    const client = new SportMonksClient();
+
+    const res = await client.get<SportMonksResponse<SportMonksTeamTransfer[]>>(
+      `/football/transfers/teams/${teamId}`,
+      {
+        include: "type;fromTeam;toTeam;player",
+        page,
+        per_page: perPage,
+      }
+    );
+
+    return {
+      transfers: mapTeamTransferRows(res.data ?? []),
+      pagination: {
+        page: res.pagination?.current_page ?? page,
+        limit: res.pagination?.per_page,
+        count: res.pagination?.count,
+        total_pages: Math.ceil(
+          res.pagination?.count / res.pagination?.per_page
+        ),
+      },
+    };
   };
 
   return {
@@ -95,5 +130,6 @@ export const TeamsSportMonksRepository = (baseRepo: {
     getTeamOverview,
     getTeamMatches,
     getTeamStats,
+    getTeamTransfers,
   };
 };

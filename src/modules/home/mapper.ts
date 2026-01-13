@@ -33,7 +33,7 @@ export const mapFixtureToHomeMatch = (f: SportMonksFixture): MatchListItem | nul
         ? "UPCOMING"
         : f.state_id === 3 || f.state_id === 4
         ? "LIVE"
-        : "FT",
+        : "FINISHED",
 
     league: {
       id: f.league.id,

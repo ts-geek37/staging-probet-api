@@ -1,3 +1,4 @@
+import { MatchStatus } from "@/integrations/sportmonks";
 import { PaginationMeta } from "@/types";
 
 export enum MatchListStatus {
@@ -12,8 +13,6 @@ export interface MatchListFilters {
   limit: number;
   q?: string;
 }
-
-export type MatchStatus = "UPCOMING" | "LIVE" | "FT";
 
 export interface MatchTeam {
   id: number;

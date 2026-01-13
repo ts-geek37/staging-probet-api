@@ -24,7 +24,7 @@ export class BillingPriceRepository {
     return price ?? null;
   };
 
-  getActivePlans = async (product: string) => { 
+  getActivePlans = async (product: string) => {
     return db
       .select({
         product: billingPrices.product,

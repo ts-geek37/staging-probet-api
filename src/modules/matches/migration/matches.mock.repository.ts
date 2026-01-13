@@ -1,3 +1,4 @@
+import { MatchStatus } from "@/integrations/sportmonks";
 import { MatchesRepository } from "./matches.repository";
 import {
   MatchesListResponse,
@@ -6,7 +7,6 @@ import {
   MatchListFilters,
   MatchListItem,
   MatchStatsResponse,
-  MatchStatus,
 } from "./matches.types";
 
 /* ----------------------------------
@@ -14,7 +14,7 @@ import {
 ---------------------------------- */
 
 const allMatches: MatchListItem[] = Array.from({ length: 30 }).map((_, i) => {
-  const status = i < 8 ? "LIVE" : i < 18 ? "UPCOMING" : "FT";
+  const status = i < 8 ? "LIVE" : i < 18 ? "UPCOMING" : "FINISHED";
 
   return {
     id: 10000 + i,

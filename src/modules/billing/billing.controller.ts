@@ -41,7 +41,7 @@ export class BillingController {
     });
   };
 
-  getSubscription = async (req: Request) => {
+  getSubscription = async (req: Request) => { 
     const user = req.user;
     if (!user) throw unauthorized("User not authenticated");
 

@@ -46,6 +46,7 @@ export const handler = (fn: ControllerFn) => {
         path: req.originalUrl,
         message: err.message,
         stack: err.stack,
+        status: err.status,
       });
 
       const status = typeof err.status === "number" ? err.status : 500;

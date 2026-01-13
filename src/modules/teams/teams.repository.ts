@@ -4,6 +4,7 @@ import {
   TeamPlayersResponse,
   TeamSeasonStatsResponse,
   TeamsListResponse,
+  TeamTransferResponse,
 } from "./teams.types";
 
 export interface TeamsRepository {
@@ -20,4 +21,6 @@ export interface TeamsRepository {
   getTeamMatches: (teamId: number) => Promise<TeamMatchesResponse | null>;
 
   getTeamStats: (teamId: number) => Promise<TeamSeasonStatsResponse | null>;
+
+  getTeamTransfers: (teamId: number, page?: number, perPage?: number) => Promise<TeamTransferResponse | null>;
 }

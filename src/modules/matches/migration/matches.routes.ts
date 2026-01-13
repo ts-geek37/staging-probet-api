@@ -7,8 +7,8 @@ import { mockMatchesRepository } from "./matches.mock.repository";
 
 const router = Router();
 
-const repo = mockMatchesRepository
-// const repo = MatchesSportMonksRepository();
+// const repo = mockMatchesRepository
+const repo = MatchesSportMonksRepository();
 const service = new MatchesService(repo);
 const controller = new MatchesController(service);
 

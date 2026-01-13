@@ -1,6 +1,6 @@
-import { LeagueCard } from "../leagues/migration/leagues.types";
+import { LeagueCard } from "../leagues/leagues.types";
 import { MatchListItem } from "../matches/migration/matches.types";
-import { TeamCard } from "../teams/migration/teams.types";
+import { TeamCard } from "../teams/teams.types";
 import { HomeRepository } from "./home.repository";
 import { HomeResponse } from "./home.types";
 
@@ -219,7 +219,7 @@ const matches: MatchListItem[] = [
   {
     id: 6005,
     kickoff_time: "2026-01-06T19:00:00Z",
-    status: "FT",
+    status: "FINISHED",
     league: { id: 104, name: "Ligue 1", logo: leagues[4].logo },
     teams: {
       home: { id: 10, name: "Paris Saint-Germain", logo: teams[7].logo },
@@ -235,7 +235,7 @@ export const mockHomeResponse: HomeResponse = {
   sections: {
     live_now: matches.filter((m) => m.status === "LIVE"),
     starting_soon: matches.filter((m) => m.status === "UPCOMING"),
-    recently_finished: matches.filter((m) => m.status === "FT"),
+    recently_finished: matches.filter((m) => m.status === "FINISHED"),
   },
 
   top_leagues: leagues,
