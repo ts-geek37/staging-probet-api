@@ -43,11 +43,15 @@ export const subscriptions = pgTable(
       .defaultNow()
       .notNull(),
   },
-  (table) => ({
-    activeByUserIdx: index("idx_subscriptions_user_active").on(
+  (table) => [
+    index("idx_subscriptions_user_active").on(
       table.userId,
       table.status,
       table.currentPeriodEnd
     ),
-  })
+
+    index("idx_subscriptions_user_id").on(table.userId),
+
+    index("idx_subscriptions_status").on(table.status),
+  ]
 );

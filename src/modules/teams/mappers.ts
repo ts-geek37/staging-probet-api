@@ -85,7 +85,9 @@ export const mapTeamOverview = (t: SportMonksTeam): TeamOverviewResponse => {
       rank: r.position,
       points: r.points,
     })),
-    socials: t.socials.map(mapSportMonksSocialToDTO),
+    socials: t.socials
+      .map(mapSportMonksSocialToDTO)
+      .filter(Boolean) as SocialDTO[],
     current_seasons: t.activeseasons.map((s) => ({
       id: s.id,
       name: s.name,
@@ -172,7 +174,7 @@ export const mapTeamSeasonStats = (
     const stats: Record<string, number | null> = {};
 
     for (const detail of seasonStat.details ?? []) {
-      const extractor = TEAM_STAT_EXTRACTORS[detail.type_id]; 
+      const extractor = TEAM_STAT_EXTRACTORS[detail.type_id];
       if (!extractor) continue;
 
       const value = extractor.extract(detail.value);

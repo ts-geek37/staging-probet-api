@@ -1,18 +1,27 @@
+import { handler } from "@/utils";
 import { Router } from "express";
-
-import { publicAuth } from "../../middlewares";
-import { handler } from "../../utils";
 import { MatchesController } from "./matches.controller";
 import { MatchesService } from "./matches.service";
-import { MatchesMockRepository } from "./repositories/matches.mock.repository";
+import { MatchesSportMonksRepository } from "./matches.sportmonks.repository";
+import { mockMatchesRepository } from "./matches.mock.repository";
 
 const router = Router();
 
-const repo = new MatchesMockRepository();
+const repo = mockMatchesRepository
+// const repo = MatchesSportMonksRepository();
 const service = new MatchesService(repo);
 const controller = new MatchesController(service);
 
-router.get("/", publicAuth, handler(controller.getMatches));
-router.get("/:id", publicAuth, handler(controller.getMatch));
+router.get("/", handler(controller.getMatches));
+router.get("/head-to-head", handler(controller.getHeadToHeadMatches));
+router.get("/:id", handler(controller.getMatch));
+router.get("/:id/stats", handler(controller.getMatchStats));
+router.get("/:id/lineups", handler(controller.getMatchLineups));
+router.get("/:id/events", handler(controller.getMatchEvents));
+router.get("/:id/comments", handler(controller.getMatchComments));
+router.get(
+  "/:id/team-stats/:seasonId",
+  handler(controller.getMatchesTeamStats)
+);
 
 export default router;

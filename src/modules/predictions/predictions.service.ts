@@ -1,5 +1,5 @@
-import { MatchesRepository } from "../matches/migration/matches.repository";
-import { PredictableMatchesResponse } from "../matches/migration/matches.types";
+import { MatchesRepository } from "../matches/matches.repository";
+import { PredictableMatchesResponse } from "../matches/matches.types";
 import { PredictionTypesResolver } from "./prediction.type.resolver";
 import { PredictionsRepository } from "./predictions.repository";
 import {

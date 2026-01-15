@@ -1,0 +1,10 @@
+export const LIVE_STATE_IDS = [
+  2,  // INPLAY_1ST_HALF
+  22, // INPLAY_2ND_HALF
+  3,  // HT
+  6,  // INPLAY_ET
+  9,  // INPLAY_PENALTIES
+  21, // EXTRA_TIME_BREAK
+];
+
+export const LIVE_POLL_INTERVAL_MS = 30_000;

@@ -1,121 +1,162 @@
 import { MatchStatus } from "@/integrations/sportmonks";
+import { TeamStatistics } from "@/modules/teams/teams.types";
 import { PaginationMeta } from "@/types";
 
 export enum MatchListStatus {
   LIVE = "live",
   UPCOMING = "upcoming",
-  TOMORROW = "tomorrow",
   FINISHED = "finished",
 }
 
-export enum MatchDetailView {
-  OVERVIEW = "overview",
-  STATS = "stats",
-  LINEUPS = "lineups",
-  EVENTS = "events",
-  PREDICTIONS = "predictions",
+export interface MatchListFilters {
+  tab: MatchStatus;
+  page: number;
+  limit: number;
+  q?: string;
 }
 
-export interface TeamSide {
+export interface MatchTeam {
   id: number;
   name: string;
-  logo: string;
-  score?: number;
+  logo: string | null;
 }
 
-export interface MatchCard {
+export interface MatchTeams {
+  home: MatchTeam;
+  away: MatchTeam;
+}
+
+export interface MatchScore {
+  home: number | null;
+  away: number | null;
+}
+
+export interface MatchListItem {
   id: number;
+  kickoff_time: string;
+  status: MatchStatus;
   league: {
     id: number;
     name: string;
+    logo: string | null;
   };
-  status: MatchStatus;
-  kickoff_time: string;
-  minute?: number;
-  home_team: TeamSide;
-  away_team: TeamSide;
+  season?: {
+    id: number;
+    name: string;
+  };
+  venue?: {
+    id?: number;
+    name?: string;
+    capacity?: number;
+    city?: string;
+    country?: string;
+    surface?: string;
+    image?: string;
+  };
+  teams: MatchTeams;
+  score?: MatchScore;
+  referee?: string;
 }
 
 export interface MatchesListResponse {
-  data: MatchCard[];
+  tab: MatchStatus;
+
+  data: MatchListItem[];
+
+  pagination: PaginationMeta;
+}
+export type MatchEventType =
+  | "GOAL"
+  | "OWN_GOAL"
+  | "PENALTY_GOAL"
+  | "CARD"
+  | "SUBSTITUTION"
+  | "PERIOD_START"
+  | "PERIOD_END"
+  | "VAR"
+  | "SYSTEM"
+  | "OTHER";
+
+export interface MatchEventItem {
+  id: number;
+  minute: number | null;
+  extra_minute: number | null;
+  type: MatchEventType;
+  team: {
+    id: number;
+    name: string;
+    logo: string | null;
+  } | null;
+  player?: {
+    id: number;
+    name: string;
+  };
+  related_player?: {
+    id: number;
+    name: string;
+  };
+  detail: string | null;
+}
+
+export interface MatchEventsResponse {
+  match_id: number;
+  events: MatchEventItem[];
+}
+export interface MatchLineupsResponse {
+  match_id: number;
+  teams: MatchLineupTeam[];
+}
+
+export interface MatchLineupTeam {
+  team: {
+    id: number;
+    name: string;
+    logo: string | null;
+  };
+  formation: string | null;
+  starting_xi: LineupPlayer[];
+  substitutes: LineupPlayer[];
+}
+
+export interface LineupPlayer {
+  id: number;
+  name: string;
+  number: number | null;
+  position_id: number | null;
+  formation_field: string | null;
+  formation_position: number | null;
+}
+
+export interface MatchStatsResponse {
+  match_id: number;
+  teams: MatchStatsTeam[];
+}
+
+export interface MatchStatsTeam {
+  team: {
+    id: number;
+    name: string;
+    logo: string | null;
+  };
+  statistics: Record<string, number | null>;
+}
+
+export interface PredictableMatchesResponse {
+  data: MatchListItem[];
   pagination: PaginationMeta;
 }
 
-export interface MatchBase {
-  id: number;
-  league: {
+export interface MatchesTeamStats {
+  away: {
     id: number;
     name: string;
-    season: string;
+    logo: string | null;
+    stats: TeamStatistics;
   };
-  status: MatchStatus;
-  kickoff_time: string;
-  minute?: number;
-  venue?: string;
-  referee?: string;
-  home_team: TeamSide;
-  away_team: TeamSide;
-}
-
-export interface MatchOverviewResponse extends MatchBase {
-  score: {
-    home: number | null;
-    away: number | null;
-  };
-}
-
-export interface MatchStatsResponse extends MatchBase {
-  statistics: {
-    team_id: number;
-    possession?: number;
-    shots_on_target?: number;
-    shots_off_target?: number;
-    corners?: number;
-    fouls?: number;
-    yellow_cards?: number;
-    red_cards?: number;
-  }[];
-}
-
-export interface Player {
-  id: number;
-  name: string;
-  number?: number;
-  position?: string;
-  photo?: string;
-}
-
-export interface MatchLineupsResponse extends MatchBase {
-  lineups: {
-    team_id: number;
-    formation?: string;
-    starting_xi: Player[];
-    substitutes: Player[];
-  }[];
-}
-
-export interface MatchEventsResponse extends MatchBase {
-  events: {
+  home: {
     id: number;
-    minute: number;
-    type: "goal" | "card" | "substitution";
-    team_id: number;
-    player_name?: string;
-    related_player_name?: string;
-  }[];
-}
-
-export interface MatchPredictionsResponse extends MatchBase {
-  prediction: {
-    home_win_probability: number;
-    draw_probability: number;
-    away_win_probability: number;
+    name: string;
+    logo: string | null;
+    stats: TeamStatistics;
   };
 }
-
-export type MatchDetailResponse =
-  | MatchOverviewResponse
-  | MatchStatsResponse
-  | MatchLineupsResponse
-  | MatchEventsResponse
-  | MatchPredictionsResponse;

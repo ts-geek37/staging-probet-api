@@ -1,11 +1,11 @@
 // home.sportmonks.repository.ts
 
-import {
-  SportMonksFixture
-} from "@/integrations/sportmonks";
-import { MatchListItem } from "@/modules/matches/migration/matches.types";
+import { SportMonksFixture } from "@/integrations/sportmonks";
+import { MatchListItem } from "@/modules/matches/matches.types";
 
-export const mapFixtureToHomeMatch = (f: SportMonksFixture): MatchListItem | null => {
+export const mapFixtureToHomeMatch = (
+  f: SportMonksFixture
+): MatchListItem | null => {
   if (!f.participants || f.participants.length < 2 || !f.league) {
     return null;
   }

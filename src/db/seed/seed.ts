@@ -6,8 +6,8 @@ import logger from "@/logger";
 
 const run = async () => {
   await seedCountries();
-  await seedLeagues();
-  await seedTeams();
+   // await seedLeagues();
+  // await seedTeams();
   process.exit(0);
 };
 

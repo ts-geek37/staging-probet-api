@@ -1,6 +1,6 @@
 import { handler } from "@/utils";
 import { Router } from "express";
-import { mockMatchesRepository } from "../matches/migration/matches.mock.repository";
+import { mockMatchesRepository } from "../matches/matches.mock.repository";
 import { PredictionTypesResolver } from "./prediction.type.resolver";
 import { PredictionsController } from "./predictions.controller";
 import { PredictionsMockRepository } from "./predictions.mock.repository";

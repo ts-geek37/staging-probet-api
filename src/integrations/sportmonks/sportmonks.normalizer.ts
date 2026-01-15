@@ -1,4 +1,4 @@
-import { MatchEventType } from "@/modules/matches/migration/matches.types";
+import { MatchEventType } from "@/modules/matches/matches.types";
 import { PlayerSeasonStatsResponse } from "@/modules/players/players.types";
 import { TeamStatistics } from "@/modules/teams/teams.types";
 import { SportMonksStandingForm } from "./entities";
@@ -151,13 +151,13 @@ export const normalizeEventType = (
 export const FIXTURE_STATE_MAP = {
   LIVE: [2, 3],
   UPCOMING: [1],
-  FT: [5, 6],
+  FINISHED: [5, 6],
 } as const;
 
 export const DATE_RANGES = {
   LIVE: { from: -1, to: +1 },
   UPCOMING: { from: 0, to: +14 },
-  FT: { from: -14, to: 0 },
+  FINISHED: { from: -14, to: 0 },
 };
 
 export const LINEUP_TYPE_MAP: Record<number, "starter" | "substitute"> = {

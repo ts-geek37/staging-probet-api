@@ -1,5 +1,5 @@
 import { LeagueCard } from "../leagues/leagues.types";
-import { MatchListItem } from "../matches/migration/matches.types";
+import { MatchListItem } from "../matches/matches.types";
 import { TeamCard } from "../teams/teams.types";
 import { HomeRepository } from "./home.repository";
 import { HomeResponse } from "./home.types";

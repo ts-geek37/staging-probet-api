@@ -2,7 +2,10 @@ export interface SportMonksCountry {
   id: number;
   name: string;
   iso2: string | null;
-  continent: string | null;
+  continent: {
+    id: number;
+    name: string;
+  };
   image_path: string | null;
 }
 
@@ -21,6 +24,10 @@ export interface SportMonksVenue {
   surface: string | null;
   national_team: boolean;
   country?: SportMonksCountry;
+  city?: {
+    id: number;
+    name: string;
+  };
 }
 
 export interface SportMonksParticipant {
@@ -240,8 +247,8 @@ export interface SportMonksTeamStatistics {
   season_id: number;
   value: Record<string, any>;
   type: string;
-  teams: SportMonksParticipant[]
-  details?: SportMonksStandingDetail[]
+  teams: SportMonksParticipant[];
+  details?: SportMonksStandingDetail[];
 }
 
 export interface SportMonksCoach {
