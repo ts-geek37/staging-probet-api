@@ -1,14 +1,19 @@
 import { index, integer, pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import { countries } from "./countries";
 
-export const countries = pgTable(
-  "countries",
+export const venues = pgTable(
+  "venues",
   {
     id: integer("id").primaryKey(),
 
     name: text("name").notNull(),
-    iso2: text("iso2"),
-    continent: text("continent"),
-    flag: text("flag"),
+
+    city: text("city"),
+
+    capacity: integer("capacity"),
+    image: text("image"),
+
+    countryId: integer("country_id").references(() => countries.id),
 
     createdAt: timestamp("created_at", { withTimezone: true })
       .defaultNow()
@@ -19,8 +24,7 @@ export const countries = pgTable(
       .notNull(),
   },
   (table) => [
-    index("countries_iso2_idx").on(table.iso2),
-    index("countries_continent_idx").on(table.continent),
-    index("countries_name_idx").on(table.name),
+    index("venues_country_id_idx").on(table.countryId),
+    index("venues_name_idx").on(table.name),
   ]
 );

@@ -1,4 +1,4 @@
-import { MatchListItem } from "@/modules/matches/migration/matches.types";
+import { MatchListItem } from "@/modules/matches/matches.types";
 import { PaginationMeta } from "@/types";
 import { LeaguesRepository } from "./leagues.repository";
 import {

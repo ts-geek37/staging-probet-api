@@ -4,7 +4,7 @@ import {
   SportMonksResponse,
 } from "@/integrations/sportmonks";
 import { getLeaguesFromDb } from "@/modules/leagues/leagues.db.repository";
-import { MatchListItem } from "@/modules/matches/migration/matches.types";
+import { MatchListItem } from "@/modules/matches/matches.types";
 import { getTeamsFromDb } from "@/modules/teams/teams.db.repository";
 import { HomeRepository } from "./home.repository";
 import { HomeResponse } from "./home.types";
