@@ -1,7 +1,6 @@
 import { Router } from "express";
 
-import { publicAuth } from "./middlewares";
-import { authGuard } from "./middlewares/authGaurd";
+import { authGuard, publicAuth } from "./middlewares";
 import { billingPricesRoutes, billingRoutes } from "./modules/billing";
 import { homeRoutes } from "./modules/home";
 import { leaguesRoutes } from "./modules/leagues";
@@ -9,7 +8,6 @@ import { matchesRoutes } from "./modules/matches";
 import { playersRoutes } from "./modules/players";
 import { predictionsRoutes } from "./modules/predictions";
 import { teamsRoutes } from "./modules/teams";
-
 const routesV2 = Router();
 
 routesV2.use("/home", publicAuth, homeRoutes);

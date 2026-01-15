@@ -12,7 +12,7 @@ type AuthGuardOptions = {
 
 const clerkAuth = ClerkExpressRequireAuth();
 
-export const authGuard =
+const authGuard =
   (options: AuthGuardOptions = {}): RequestHandler =>
   async (req: any, res: any, next: NextFunction) => {
     try {
@@ -60,3 +60,5 @@ export const authGuard =
       next(error);
     }
   };
+
+export default authGuard;
