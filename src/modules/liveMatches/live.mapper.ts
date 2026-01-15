@@ -1,7 +1,7 @@
 import {
   normalizeFixtureStatus,
   SportMonksFixture,
-} from "@/integrations/sportmonks";
+} from "../../integrations/sportmonks";
 import { LiveMatchItem } from "./live.types";
 import { MatchListStatus } from "../matches/matches.types";
 
@@ -25,20 +25,20 @@ export const mapLiveMatchListItem = (
 
   const mapSc =
     homeScore && awayScore ? { home: homeScore, away: awayScore } : null;
- 
-const state = Object.values(MatchListStatus).find(
-  (s) => MatchListStatus[s] === stateId
-);
 
-const stateId = state ? state.id : null;
-const stateName = state ? state.name : null;
-const stateShort = state ? state.short : null;
+  const state = Object.values(MatchListStatus).find(
+    (s) => MatchListStatus[s] === stateId
+  );
 
-const mappedState = {
-  id: stateId,
-  name: stateName,
-  short: stateShort,
-};
+  const stateId = state ? state.id : null;
+  const stateName = state ? state.name : null;
+  const stateShort = state ? state.short : null;
+
+  const mappedState = {
+    id: stateId,
+    name: stateName,
+    short: stateShort,
+  };
   return {
     id: fixture.id,
     league: {

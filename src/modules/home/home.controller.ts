@@ -1,6 +1,6 @@
 import { Request } from "express";
 
-import { notFound, success } from "@/utils";
+import { notFound, success } from "../../utils";
 import { HomeService } from "./home.service";
 
 export class HomeController {

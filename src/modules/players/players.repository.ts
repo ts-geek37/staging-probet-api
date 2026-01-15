@@ -1,4 +1,4 @@
-import { TeamTransferResponse } from "@/modules/teams/teams.types";
+import { TeamTransferResponse } from "../../modules/teams/teams.types";
 import {
   PlayerMatchesResponse,
   PlayerProfileResponse,

@@ -2,11 +2,11 @@ import "dotenv/config";
 import { seedCountries } from "./seed.countries";
 import { seedLeagues } from "./seed.leagues";
 import { seedTeams } from "./seed.teams";
-import logger from "@/logger";
+import logger from "../../logger";
 
 const run = async () => {
   await seedCountries();
-   // await seedLeagues();
+  // await seedLeagues();
   // await seedTeams();
   process.exit(0);
 };

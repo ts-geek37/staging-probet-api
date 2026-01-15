@@ -1,7 +1,7 @@
 import {
-    SportMonksClient,
-    SportMonksResponse,
-} from "@/integrations/sportmonks";
+  SportMonksClient,
+  SportMonksResponse,
+} from "../../integrations/sportmonks";
 import { PredictionsRepository } from "./predictions.repository";
 import { FixtureValueBetsResponse, RawPrediction } from "./predictions.types";
 

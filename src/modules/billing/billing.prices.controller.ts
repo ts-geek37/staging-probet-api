@@ -1,4 +1,4 @@
-import { badRequest, success } from "@/utils";
+import { badRequest, success } from "../../utils";
 import { Request } from "express";
 import { BillingPricesService } from "./billing.prices.service";
 
@@ -11,7 +11,7 @@ export class BillingPricesController {
   };
 
   getActivePrice = async (req: Request) => {
-    const plan = req.query.plan; 
+    const plan = req.query.plan;
     if (!plan) throw badRequest("Invalid billing cycle");
 
     if (

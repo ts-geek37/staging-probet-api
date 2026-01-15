@@ -1,8 +1,8 @@
 import { eq, ilike, sql } from "drizzle-orm";
 import { TeamsListResponse, TeamCard } from "./teams.types";
-import { teams } from "@/db/schema/teams";
-import { db } from "@/db";
-import { countries } from "@/db/schema/countries";
+import { teams } from "../../db/schema/teams";
+import { db } from "../../db";
+import { countries } from "../../db/schema/countries";
 
 export const getTeamsFromDb = async (
   page: number,

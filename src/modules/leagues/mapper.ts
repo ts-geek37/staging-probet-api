@@ -8,7 +8,7 @@ import {
   STANDING_DETAIL_TYPE_MAP,
   StandingDetailKey,
   StandingScope,
-} from "@/integrations/sportmonks";
+} from "../../integrations/sportmonks";
 import {
   CurrentSeason,
   TopScorerTable,
@@ -111,10 +111,9 @@ export const mapLeagueFixtureMatch = (f: SportMonksFixture) => {
   const home = f.participants.find((p) => p.meta?.location === "home");
   const away = f.participants.find((p) => p.meta?.location === "away");
   if (!home || !away || !f.league) return null;
- 
+
   const status = normalizeFixtureStatus(f.state_id);
 
-  
   return {
     id: f.id,
     kickoff_time: f.starting_at,

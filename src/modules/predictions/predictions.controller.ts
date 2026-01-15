@@ -1,4 +1,4 @@
-import { success } from "@/utils";
+import { success } from "../../utils";
 import { Request } from "express";
 import { PredictionsService } from "./predictions.service";
 

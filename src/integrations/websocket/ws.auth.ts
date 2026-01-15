@@ -1,4 +1,4 @@
-import logger from "@/logger";
+import logger from "../../logger";
 import { Socket } from "socket.io";
 import { getWsContext } from "./ws.context";
 

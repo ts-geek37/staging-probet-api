@@ -1,7 +1,7 @@
 import {
   MatchStatus,
   SportMonksFixtureComment,
-} from "@/integrations/sportmonks";
+} from "../../integrations/sportmonks";
 import { MatchesRepository } from "./matches.repository";
 import {
   MatchEventsResponse,

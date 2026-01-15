@@ -1,4 +1,4 @@
-import { handler } from "@/utils";
+import { handler } from "../../utils";
 import { Router } from "express";
 import { mockMatchesRepository } from "../matches/matches.mock.repository";
 import { PredictionTypesResolver } from "./prediction.type.resolver";

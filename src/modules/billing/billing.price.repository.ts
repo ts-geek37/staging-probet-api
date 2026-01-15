@@ -1,5 +1,5 @@
-import { db } from "@/db";
-import { billingPrices } from "@/db/schema/billing_prices";
+import { db } from "../../db";
+import { billingPrices } from "../../db/schema/billing_prices";
 import { and, eq } from "drizzle-orm";
 
 export class BillingPriceRepository {

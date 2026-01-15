@@ -1,9 +1,9 @@
 import { clerkClient, ClerkExpressRequireAuth } from "@clerk/clerk-sdk-node";
 import { NextFunction, RequestHandler } from "express";
 
-import { BillingRepository } from "@/modules/billing/billing.repository";
-import { UserRepository } from "@/modules/user";
-import { forbidden, unauthorized } from "@/utils";
+import { BillingRepository } from "../modules/billing/billing.repository";
+import { UserRepository } from "../modules/user";
+import { forbidden, unauthorized } from "../utils";
 
 type AuthGuardOptions = {
   attachUser?: boolean;

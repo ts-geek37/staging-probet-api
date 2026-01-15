@@ -7,7 +7,7 @@ import {
   SportMonksTeam,
   SportMonksTeamSeasonStatistic,
   SportMonksTeamTransfer,
-} from "@/integrations/sportmonks";
+} from "../../integrations/sportmonks";
 import {
   mapTeamMatches,
   mapTeamOverview,

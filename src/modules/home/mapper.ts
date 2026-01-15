@@ -1,7 +1,7 @@
 // home.sportmonks.repository.ts
 
-import { SportMonksFixture } from "@/integrations/sportmonks";
-import { MatchListItem } from "@/modules/matches/matches.types";
+import { SportMonksFixture } from "../../integrations/sportmonks";
+import { MatchListItem } from "../../modules/matches/matches.types";
 
 export const mapFixtureToHomeMatch = (
   f: SportMonksFixture

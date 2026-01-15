@@ -1,4 +1,4 @@
-import { badRequest, success, unauthorized } from "@/utils";
+import { badRequest, success, unauthorized } from "../../utils";
 import { Request } from "express";
 import { UserRepository } from "../user";
 import { BillingService } from "./billing.service";
@@ -41,12 +41,12 @@ export class BillingController {
     });
   };
 
-  getSubscription = async (req: Request) => { 
+  getSubscription = async (req: Request) => {
     const user = req.user;
     if (!user) throw unauthorized("User not authenticated");
 
     const subscription = await this.service.getUserSubscription(user.id);
- 
+
     if (!subscription) {
       return success({
         is_vip: false,

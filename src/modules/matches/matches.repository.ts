@@ -1,4 +1,4 @@
-import { SportMonksFixtureComment } from "@/integrations/sportmonks";
+import { SportMonksFixtureComment } from "../../integrations/sportmonks";
 import {
   MatchesListResponse,
   MatchesTeamStats,
@@ -43,5 +43,8 @@ export interface MatchesRepository {
     matchId: number
   ) => Promise<SportMonksFixtureComment[] | null>;
 
-  getTeamStats: (matchId: number, seasonId: number) => Promise<MatchesTeamStats | null>;
+  getTeamStats: (
+    matchId: number,
+    seasonId: number
+  ) => Promise<MatchesTeamStats | null>;
 }

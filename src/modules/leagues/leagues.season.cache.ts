@@ -1,7 +1,7 @@
-import { normalizeCompetitionType } from "@/integrations/sportmonks";
-import { SportMonksLeague } from "@/integrations/sportmonks/entities";
-import { SportMonksClient } from "@/integrations/sportmonks/sportmonks.client";
-import { SportMonksResponse } from "@/integrations/sportmonks/sportmonks.types";
+import { normalizeCompetitionType } from "../../integrations/sportmonks";
+import { SportMonksLeague } from "../../integrations/sportmonks/entities";
+import { SportMonksClient } from "../../integrations/sportmonks/sportmonks.client";
+import { SportMonksResponse } from "../../integrations/sportmonks/sportmonks.types";
 import { CachedLeagueContext } from "./leagues.types";
 
 const CACHE_TTL = 60 * 60 * 1000; // 1 hour
@@ -99,4 +99,3 @@ const resolveLeagueContext = async (
 };
 
 export { resolveLeagueContext };
-

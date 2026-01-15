@@ -1,5 +1,5 @@
-import { MatchListItem } from "@/modules/matches/matches.types";
-import { PaginationMeta } from "@/types";
+import { MatchListItem } from "../../modules/matches/matches.types";
+import { PaginationMeta } from "../../types";
 
 export interface LeagueCard {
   id: number;

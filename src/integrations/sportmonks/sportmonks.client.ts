@@ -1,4 +1,4 @@
-import logger from "@/logger";
+import logger from "../../logger";
 import axios, { AxiosError, AxiosInstance } from "axios";
 import { SportMonksError } from "./sportmonks.errors";
 

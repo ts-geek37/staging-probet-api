@@ -1,4 +1,4 @@
-import { handler } from "@/utils";
+import { handler } from "../../utils";
 import { Router } from "express";
 import { LeaguesController } from "./leagues.controller";
 import { LeaguesService } from "./leagues.service";

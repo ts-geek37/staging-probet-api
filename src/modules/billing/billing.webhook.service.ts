@@ -1,5 +1,5 @@
-import { StripeClient } from "@/integrations/stripe";
-import logger from "@/logger";
+import { StripeClient } from "../../integrations/stripe";
+import logger from "../../logger";
 import Stripe from "stripe";
 import { UserRepository } from "../user";
 import { BillingRepository } from "./billing.repository";

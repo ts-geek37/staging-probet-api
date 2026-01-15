@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { handler } from "@/utils";
+import { handler } from "../../utils";
 import { getTeamProfileFromDb, getTeamsFromDb } from "./teams.db.repository";
 import { mockTeamsRepository } from "./teams.mock.repository";
 import { TeamsController } from "./teams.controller";

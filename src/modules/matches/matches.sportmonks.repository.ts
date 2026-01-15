@@ -7,7 +7,7 @@ import {
   SportMonksFixture,
   SportMonksFixtureComment,
   SportMonksResponse,
-} from "@/integrations/sportmonks";
+} from "../../integrations/sportmonks";
 import {
   mapFixtureToListItem,
   mapMatchEvents,

@@ -1,6 +1,6 @@
-import { MatchEventType } from "@/modules/matches/matches.types";
-import { PlayerSeasonStatsResponse } from "@/modules/players/players.types";
-import { TeamStatistics } from "@/modules/teams/teams.types";
+import { MatchEventType } from "../../modules/matches/matches.types";
+import { PlayerSeasonStatsResponse } from "../../modules/players/players.types";
+import { TeamStatistics } from "../../modules/teams/teams.types";
 import { SportMonksStandingForm } from "./entities";
 
 export type CompetitionType = "league" | "cup";

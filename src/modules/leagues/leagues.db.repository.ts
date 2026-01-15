@@ -1,7 +1,7 @@
-import { db } from "@/db";
-import { countries } from "@/db/schema/countries";
-import { leagues } from "@/db/schema/leagues";
-import { normalizeCompetitionType } from "@/integrations/sportmonks";
+import { db } from "../../db";
+import { countries } from "../../db/schema/countries";
+import { leagues } from "../../db/schema/leagues";
+import { normalizeCompetitionType } from "../../integrations/sportmonks";
 import { eq, ilike, sql } from "drizzle-orm";
 import { LeagueProfileResponse, LeaguesListResponse } from "./leagues.types";
 

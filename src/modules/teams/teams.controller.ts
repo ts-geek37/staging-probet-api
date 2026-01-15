@@ -1,4 +1,4 @@
-import { badRequest, notFound, success } from "@/utils";
+import { badRequest, notFound, success } from "../../utils";
 import { Request } from "express";
 import { TeamsService } from "./teams.service";
 

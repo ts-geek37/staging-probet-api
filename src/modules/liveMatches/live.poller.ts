@@ -1,4 +1,4 @@
-import logger from "@/logger";
+import logger from "../../logger";
 import { broadcastLiveMatches } from "./live.broadcaster";
 import { setLiveCache } from "./live.cache";
 import { LIVE_POLL_INTERVAL_MS } from "./live.constants";

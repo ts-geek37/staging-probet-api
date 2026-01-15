@@ -7,7 +7,7 @@ import {
   SportMonksTeam,
   SportMonksTeamTransfer,
   formatDate as i,
-} from "@/integrations/sportmonks";
+} from "../../integrations/sportmonks";
 import {
   PlayerProfileResponse,
   PlayerSeasonStatsResponse,
@@ -40,17 +40,17 @@ export const mapPlayerProfile = (
     })) ?? [];
 
   const currentTeam = teams[0] ?? null;
-  
-    const trophies = p.trophies?.map((t) => ({
-      id: t.id,
-      name: t.trophy?.name,
-      position: t.trophy?.position,
-      team:{
-        id: t.team.id,
-        name: t.team.name,
-        logo : t.team.image_path
-      }
-    }))
+
+  const trophies = p.trophies?.map((t) => ({
+    id: t.id,
+    name: t.trophy?.name,
+    position: t.trophy?.position,
+    team: {
+      id: t.team.id,
+      name: t.team.name,
+      logo: t.team.image_path,
+    },
+  }));
   return {
     id: p.id,
     name: p.name,

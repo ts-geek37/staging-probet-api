@@ -1,6 +1,6 @@
-import { MatchStatus } from "@/integrations/sportmonks";
-import { TeamStatistics } from "@/modules/teams/teams.types";
-import { PaginationMeta } from "@/types";
+import { MatchStatus } from "../../integrations/sportmonks";
+import { TeamStatistics } from "../../modules/teams/teams.types";
+import { PaginationMeta } from "../../types";
 
 export enum MatchListStatus {
   LIVE = "live",

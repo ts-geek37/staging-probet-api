@@ -6,9 +6,9 @@ import {
   SportMonksPlayerSeasonStatistic,
   SportMonksResponse,
   SportMonksTeamTransfer,
-} from "@/integrations/sportmonks";
-import { mapTeamTransferRows } from "@/modules/teams/mappers";
-import { TeamTransferResponse } from "@/modules/teams/teams.types";
+} from "../../integrations/sportmonks";
+import { mapTeamTransferRows } from "../../modules/teams/mappers";
+import { TeamTransferResponse } from "../../modules/teams/teams.types";
 import {
   formatDate,
   mapPlayerMatch,

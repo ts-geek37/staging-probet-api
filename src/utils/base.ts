@@ -1,6 +1,6 @@
 import { Response as ExpressResponse, Request } from "express";
 
-import logger from "@/logger";
+import logger from "../logger";
 import { Response } from "../types";
 
 type ControllerFn = (req: Request) => Promise<Response<any> | void>;

@@ -1,4 +1,4 @@
-import { handler } from "@/utils";
+import { handler } from "../../utils";
 import { Router } from "express";
 import { MatchesController } from "./matches.controller";
 import { MatchesService } from "./matches.service";
@@ -7,7 +7,7 @@ import { mockMatchesRepository } from "./matches.mock.repository";
 
 const router = Router();
 
-const repo = mockMatchesRepository
+const repo = mockMatchesRepository;
 // const repo = MatchesSportMonksRepository();
 const service = new MatchesService(repo);
 const controller = new MatchesController(service);

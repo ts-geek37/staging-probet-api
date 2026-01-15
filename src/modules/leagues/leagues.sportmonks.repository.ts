@@ -5,7 +5,7 @@ import {
   SportMonksStanding,
   SportMonksTopScorer,
   formatDate,
-} from "@/integrations/sportmonks";
+} from "../../integrations/sportmonks";
 import { getLeagueProfileFromDb } from "./leagues.db.repository";
 import { LeaguesRepository } from "./leagues.repository";
 import { resolveLeagueContext } from "./leagues.season.cache";

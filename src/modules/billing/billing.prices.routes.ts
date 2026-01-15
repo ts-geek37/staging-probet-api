@@ -1,4 +1,4 @@
-import { handler } from "@/utils";
+import { handler } from "../../utils";
 import { Router } from "express";
 import { BillingPriceRepository } from "./billing.price.repository";
 import { BillingPricesController } from "./billing.prices.controller";

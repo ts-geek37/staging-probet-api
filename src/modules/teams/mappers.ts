@@ -7,7 +7,7 @@ import {
   SportMonksTeamSeasonStatistic,
   SportMonksTeamTransfer,
   TEAM_STAT_EXTRACTORS,
-} from "@/integrations/sportmonks";
+} from "../../integrations/sportmonks";
 import {
   SocialDTO,
   TeamMatchesResponse,

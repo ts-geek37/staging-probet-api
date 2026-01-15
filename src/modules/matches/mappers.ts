@@ -8,8 +8,8 @@ import {
   SportMonksLineup,
   SportMonksParticipant,
   TEAM_STAT_EXTRACTORS,
-} from "@/integrations/sportmonks";
-import { TeamStatistics } from "@/modules/teams/teams.types";
+} from "../../integrations/sportmonks";
+import { TeamStatistics } from "../../modules/teams/teams.types";
 import {
   MatchEventsResponse,
   MatchLineupsResponse,

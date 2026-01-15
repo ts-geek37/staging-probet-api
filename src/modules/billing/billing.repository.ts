@@ -1,6 +1,6 @@
-import { db } from "@/db";
-import { stripeEvents } from "@/db/schema/stripe_events";
-import { subscriptions } from "@/db/schema/subscription";
+import { db } from "../../db";
+import { stripeEvents } from "../../db/schema/stripe_events";
+import { subscriptions } from "../../db/schema/subscription";
 import { and, eq, gt } from "drizzle-orm";
 
 export class BillingRepository {

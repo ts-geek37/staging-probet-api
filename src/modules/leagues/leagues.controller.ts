@@ -1,5 +1,5 @@
-import { MatchListStatus } from "@/modules/matches/matches.types";
-import { badRequest, notFound, success } from "@/utils";
+import { MatchListStatus } from "../../modules/matches/matches.types";
+import { badRequest, notFound, success } from "../../utils";
 import { Request } from "express";
 import { LeaguesService } from "./leagues.service";
 

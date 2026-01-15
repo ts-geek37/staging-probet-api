@@ -1,5 +1,5 @@
-import { StripeClient } from "@/integrations/stripe";
-import logger from "@/logger";
+import { StripeClient } from "../../integrations/stripe";
+import logger from "../../logger";
 import { BillingCycle } from "./billing.constants";
 import { BillingPriceRepository } from "./billing.price.repository";
 import { BillingRepository } from "./billing.repository";
